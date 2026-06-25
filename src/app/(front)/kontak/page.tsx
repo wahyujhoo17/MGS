@@ -40,8 +40,8 @@ export default function KontakPage() {
                   <div>
                     <h3 className="font-barlow font-bold text-steel uppercase tracking-widest text-xs mb-1">Alamat Pabrik</h3>
                     <p className="leading-relaxed">
-                      Jl. Industri No. 45, Komplek Pergudangan<br />
-                      Surabaya, Jawa Timur 60123
+                      RT.10/RW.03, Simo, Sumuragung<br />
+                      Kec. Baureno, Bojonegoro, Jawa Timur 62192
                     </p>
                   </div>
                   <div>
@@ -50,15 +50,23 @@ export default function KontakPage() {
                   </div>
                   <div>
                     <h3 className="font-barlow font-bold text-steel uppercase tracking-widest text-xs mb-1">Telepon / WhatsApp</h3>
-                    <p className="font-mono text-lg text-white mt-1">+62 812-3456-7890</p>
+                    <p className="font-mono text-lg text-white mt-1">+62 813-3356-0417</p>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-12 aspect-[4/3] bg-charcoal border-2 border-steel/30 relative flex items-center justify-center p-4 text-center">
-                 <span className="font-mono text-steel text-xs uppercase tracking-widest">
-                   Google Maps Embed Placeholder
-                 </span>
+              <div className="mt-12 aspect-[4/3] bg-charcoal border-2 border-steel/30 relative overflow-hidden">
+                <iframe
+                  src="https://maps.google.com/maps?q=MGS%20Jaya%20Abadi%2C%20RT.10%2FRW.03%2C%20Simo%2C%20Sumuragung%2C%20Kec.%20Baureno%2C%20Kabupaten%20Bojonegoro%2C%20Jawa%20Timur%2062192&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Google Maps MGS Jaya Abadi"
+                  className="absolute inset-0 w-full h-full"
+                ></iframe>
               </div>
             </div>
 

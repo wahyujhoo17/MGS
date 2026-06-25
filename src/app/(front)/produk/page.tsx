@@ -1,138 +1,58 @@
-'use client';
+import prisma from "@/lib/prisma";
+import ProductListClient from "./ProductListClient";
+import type { Metadata } from "next";
 
-import { useState } from 'react';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
-import { WhatsAppButton } from '@/components/shared/WhatsAppButton';
-import { products } from '@/data/products';
-import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+export const metadata: Metadata = {
+  title: "Katalog Snack Tradisional — MGS Jaya Abadi",
+  description: "Temukan katalog lengkap produk snack tradisional kami: makaroni pedas daun jeruk, basreng nendang, mie lidi, keripik pedas. Melayani grosir dan eceran.",
+};
 
-export default function ProdukPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeChip, setActiveChip] = useState<string>('Semua');
+export const dynamic = "force-dynamic";
 
-  const filteredProducts = products.filter(p => {
-    if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    if (activeChip !== 'Semua' && p.category !== activeChip.toLowerCase()) return false;
-    return true;
+export default async function ProdukPage() {
+  const dbProducts = await prisma.product.findMany({
+    include: {
+      category: true,
+      variants: {
+        orderBy: {
+          priceRetail: "asc",
+        },
+      },
+    },
   });
 
-  return (
-    <>
-      <Navbar />
-      <main className="flex-grow pt-16">
-        {/* Page Header */}
-        <section className="bg-offwhite pt-16 pb-24 text-navy relative border-b border-concrete">
-          <div className="max-w-7xl mx-auto px-6">
-            <SectionEyebrow label="Katalog Lengkap" />
-            <h1 className="font-display font-bold text-5xl md:text-6xl uppercase tracking-tight mb-4">
-              Katalog Produk Kami
-            </h1>
-            <p className="text-iron max-w-xl text-lg">
-              Dari makaroni pedas hingga basreng gurih. Temukan berbagai pilihan makanan ringan untuk konsumsi pribadi atau grosir toko Anda.
-            </p>
-          </div>
-        </section>
+  const mappedProducts = dbProducts.map((p) => {
+    // Unique list of sizes and tastes
+    const sizes = Array.from(new Set(p.variants.map((v) => v.size)));
+    const tastes = Array.from(new Set(p.variants.map((v) => v.taste)));
 
-        <div className="bg-offwhite min-h-[50vh] pb-24">
-          {/* Filter Bar (Sticky) */}
-          <div className="sticky top-20 z-30 bg-white border-b border-concrete py-3 shadow-sm">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-2">
-                {/* Search Input */}
-                <div className="w-full md:w-1/3">
-                  <input
-                    type="text"
-                    placeholder="Cari produk..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full border border-concrete bg-offwhite px-4 py-2 text-sm focus:outline-none focus:border-royal focus:ring-1 focus:ring-royal transition-all rounded-[4px]"
-                  />
-                </div>
+    // Min and Max prices for display
+    const pricesRetail = p.variants.map((v) => v.priceRetail);
+    const minPrice = pricesRetail.length ? Math.min(...pricesRetail) : 0;
+    const maxPrice = pricesRetail.length ? Math.max(...pricesRetail) : 0;
 
-                {/* Chips Jenis */}
-                <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-1">
-                  {['Semua', 'Makaroni', 'Basreng', 'Mie-Lidi', 'Keripik', 'Lainnya'].map((chip) => (
-                    <button
-                      key={chip}
-                      onClick={() => setActiveChip(chip)}
-                      className={cn(
-                        'px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-[4px] whitespace-nowrap transition-colors border',
-                        activeChip === chip
-                          ? 'bg-royal border-royal text-white'
-                          : 'bg-transparent border-concrete text-iron hover:border-iron'
-                      )}
-                    >
-                      {chip.replace('-', ' ')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+    const pricesWholesale = p.variants.map((v) => v.priceWholesale);
+    const minPriceWholesale = pricesWholesale.length ? Math.min(...pricesWholesale) : 0;
 
-          {/* Product Grid */}
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="group bg-white border border-concrete rounded-[8px] overflow-hidden hover:border-royal hover:shadow-lg transition-all duration-300 flex flex-col"
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center border-b border-concrete overflow-hidden p-6">
-                    <div className="relative w-full h-full flex items-center justify-center">
-                      <img src="/img/product_snack.png" alt={product.name} className="max-w-full max-h-full object-contain opacity-90 mix-blend-darken hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  </div>
+    // Use the first variant image as product image or fallback
+    const imageUrl = p.variants[0]?.imageUrl || "/img/product_snack.png";
 
-                  {/* Content */}
-                  <div className="p-5 flex flex-col flex-grow">
-                    <h3 className="font-display font-bold text-xl text-navy uppercase tracking-wide mb-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-iron text-sm mb-4">
-                      {product.variants.length} Varian | {product.weight}
-                    </p>
-                    <hr className="mb-4" />
-                    <div className="mb-6">
-                      <div className="text-royal font-semibold text-lg">
-                        Rp {product.priceRetail.toLocaleString('id-ID')} <span className="text-sm text-iron font-normal">/ pcs</span>
-                      </div>
-                      <div className="text-iron text-sm">
-                        Rp {product.priceWholesale.toLocaleString('id-ID')} (grosir)
-                      </div>
-                    </div>
-                    <Link href={`/produk/${product.slug}`} className="mt-auto">
-                      <Button variant="dark" size="full">
-                        Lihat Detail →
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {filteredProducts.length === 0 && (
-              <div className="py-24 text-center">
-                <p className="text-iron font-medium">Tidak ada produk yang cocok dengan pencarian Anda.</p>
-                <button 
-                  onClick={() => { setSearchQuery(''); setActiveChip('Semua'); }}
-                  className="mt-4 text-royal font-bold uppercase underline"
-                >
-                  Reset Filter
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </>
-  );
+    return {
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      description: p.description,
+      isSelfProduced: p.isSelfProduced,
+      category: p.category.slug,
+      sizes,
+      tastes,
+      minPrice,
+      maxPrice,
+      minPriceWholesale,
+      imageUrl,
+      variantsCount: p.variants.length,
+    };
+  });
+
+  return <ProductListClient initialProducts={mappedProducts} />;
 }

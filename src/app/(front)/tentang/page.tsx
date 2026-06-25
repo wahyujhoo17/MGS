@@ -2,6 +2,12 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Tentang Pabrik & Produksi — MGS Jaya Abadi",
+  description: "Mengenal lebih dekat pabrik produksi snack tradisional MGS Jaya Abadi. Industri UMKM lokal dengan armada ekspedisi mandiri yang mengutamakan kualitas, kebersihan, dan amanah.",
+};
 
 export default function TentangPage() {
   return (

@@ -21,20 +21,32 @@ model Category {
 }
 
 model Product {
+  id             String           @id @default(cuid())
+  slug           String           @unique
+  name           String
+  description    String
+  isSelfProduced Boolean          @default(true)
+  
+  categoryId     String
+  category       Category         @relation(fields: [categoryId], references: [id])
+  
+  variants       ProductVariant[]
+  
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model ProductVariant {
   id                String   @id @default(cuid())
-  slug              String   @unique
-  name              String
-  description       String
-  variants          String[]
-  weight            String
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  size              String   // e.g. "100g", "250g"
+  taste             String   // e.g. "Pedas Level 1", "Original"
   priceRetail       Int
   priceWholesale    Int
-  minOrderWholesale Int
-  isSelfProduced    Boolean  @default(true)
+  minOrderWholesale Int      @default(12)
   imageUrl          String?
-  
-  categoryId        String
-  category          Category @relation(fields: [categoryId], references: [id])
   
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
