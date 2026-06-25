@@ -3,6 +3,8 @@ import { getNextAdminProps } from "@premieroctet/next-admin/appRouter";
 import prisma from "@/lib/prisma";
 import { options } from "@/lib/next-admin";
 
+export const dynamic = "force-dynamic";
+
 type PromisePageProps = {
   params: Promise<{ nextadmin: string[] }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

@@ -9,6 +9,8 @@ import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton';
 import { buildWALink } from '@/lib/whatsapp';
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>

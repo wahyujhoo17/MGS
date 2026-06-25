@@ -1,23 +1,30 @@
 import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mgsjayaabadi.com";
 
-  // Get all product slugs and updated timestamps from the database
-  const products = await prisma.product.findMany({
-    select: {
-      slug: true,
-      updatedAt: true,
-    },
-  });
+  let productEntries: any[] = [];
+  try {
+    // Get all product slugs and updated timestamps from the database
+    const products = await prisma.product.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    });
 
-  const productEntries = products.map((p) => ({
-    url: `${baseUrl}/produk/${p.slug}`,
-    lastModified: p.updatedAt,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+    productEntries = products.map((p) => ({
+      url: `${baseUrl}/produk/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch products for sitemap during build or runtime:", error);
+  }
 
   return [
     {
@@ -47,3 +54,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...productEntries,
   ];
 }
+
