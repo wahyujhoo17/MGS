@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-navy: #0B1F6B;
+  --color-royal: #1A3BAF;
+  --color-sky: #2E6FD4;
+  --color-steel: #7EB8E8;
+  --color-white: #FFFFFF;
+  --color-offwhite: #F4F7FC;
+  --color-concrete: #D1D9E6;
+  --color-iron: #4A5568;
+  --color-charcoal: #0D1117;
+  --color-signal: #E8B400;
+  --color-halal: #16A34A;
+  --color-danger: #DC2626;
+
+  --font-display: var(--font-display), sans-serif;
+  --font-sans: var(--font-sans), sans-serif;
+  --font-barlow: var(--font-barlow), sans-serif;
+
+  /* We'll use radius-none and minimal radius-sm for Brutalism */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px; /* For cards if needed, though we prefer boxy */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Custom utilities for Industrial Brutalism and design.md specs */
+@layer utilities {
+  .clip-hero-diagonal {
+    clip-path: polygon(0 0, 58% 0, 48% 100%, 0 100%);
+  }
+  .clip-diagonal-bottom {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 90%);
   }
 }
 
+/* Industrial Brutalist Reset Overrides */
+* {
+  border-color: var(--color-concrete);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-offwhite);
+  color: var(--color-navy);
+  /* Analog degradation is sometimes requested, but we'll stick to the clean industrial mode (Swiss Print) */
+}
+
+/* Base styles for raw functionality */
+hr {
+  border-top: 1px solid var(--color-concrete);
+  margin: 0;
 }
