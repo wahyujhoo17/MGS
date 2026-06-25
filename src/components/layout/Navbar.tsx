@@ -35,7 +35,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center relative z-50" onClick={() => setIsOpen(false)}>
             <div className="relative w-32 h-10">
-               <Image src="/img/MGS.png" alt="MGS Logo" fill className="object-contain object-left" priority />
+               <Image src="/img/MGS.png" alt="MGS Logo" fill sizes="(max-width: 768px) 100vw, 200px" className="object-contain object-left" priority />
             </div>
           </Link>
 

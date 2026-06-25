@@ -34,8 +34,9 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${barlowCondensed.variable} ${barlow.variable} ${inter.variable} antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-[100dvh] flex flex-col font-sans text-navy bg-offwhite selection:bg-royal selection:text-white">
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

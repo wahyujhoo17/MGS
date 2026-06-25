@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@premieroctet/next-admin/theme";
+@source "../../node_modules/@premieroctet/next-admin/dist/**/*.{js,mjs,jsx,tsx}";
 
 @theme {
   --color-navy: #0B1F6B;
@@ -34,19 +36,18 @@
   }
 }
 
-/* Industrial Brutalist Reset Overrides */
-* {
+/* Industrial Brutalist Reset Overrides (Scoped to storefront) */
+.front-layout {
+  background-color: var(--color-offwhite);
+  color: var(--color-navy);
+}
+
+.front-layout * {
   border-color: var(--color-concrete);
 }
 
-body {
-  background-color: var(--color-offwhite);
-  color: var(--color-navy);
-  /* Analog degradation is sometimes requested, but we'll stick to the clean industrial mode (Swiss Print) */
-}
-
-/* Base styles for raw functionality */
-hr {
+.front-layout hr {
   border-top: 1px solid var(--color-concrete);
   margin: 0;
 }
+

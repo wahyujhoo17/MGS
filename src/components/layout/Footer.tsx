@@ -10,7 +10,7 @@ export function Footer() {
           {/* Kolom 1: Logo & Deskripsi */}
           <div className="space-y-6">
             <Link href="/" className="inline-block relative w-40 h-12">
-              <Image src="/img/MGS.png" alt="MGS Logo" fill className="object-contain object-left" />
+              <Image src="/img/MGS.png" alt="MGS Logo" fill sizes="(max-width: 768px) 100vw, 200px" className="object-contain object-left" />
             </Link>
             <p className="text-sm leading-relaxed text-iron/80 pr-4">
               Produsen dan distributor snack makanan ringan tradisional. Menghadirkan kualitas pabrik untuk seluruh lapisan masyarakat sejak tahun 2002.
