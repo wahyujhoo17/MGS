@@ -39,8 +39,8 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-bold text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] tracking-tight uppercase mb-6 md:mb-8 text-navy"
           >
-            Kriuk Pedas Maksimal.<br />
-            <span className="text-royal">Margin Optimal.</span>
+            Pabrik Snack Pedas.<br />
+            <span className="text-royal">Kualitas Konsisten.</span>
           </motion.h1>
 
           <motion.p
@@ -49,7 +49,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-iron text-base md:text-lg lg:text-xl leading-relaxed max-w-lg mb-8 md:mb-10"
           >
-            Pusat produksi aneka snack pedas dan gurih higienis dengan cita rasa konsisten. Harga tangan pertama yang memastikan keuntungan maksimal untuk agen dan reseller.
+            MGS Jaya Abadi memproduksi aneka makanan ringan pedas dan gurih dengan standar kebersihan tinggi. Berkomitmen menjaga kerenyahan dan cita rasa bumbu yang khas di setiap kemasan untuk kepuasan pelanggan.
           </motion.p>
 
           <motion.div

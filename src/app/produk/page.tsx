@@ -40,7 +40,7 @@ export default function ProdukPage() {
 
         <div className="bg-offwhite min-h-[50vh] pb-24">
           {/* Filter Bar (Sticky) */}
-          <div className="sticky top-16 z-30 bg-white border-b border-concrete py-3 shadow-sm">
+          <div className="sticky top-20 z-30 bg-white border-b border-concrete py-3 shadow-sm">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-2">
                 {/* Search Input */}
@@ -84,9 +84,9 @@ export default function ProdukPage() {
                   className="group bg-white border border-concrete rounded-[8px] overflow-hidden hover:border-royal hover:shadow-lg transition-all duration-300 flex flex-col"
                 >
                   {/* Image */}
-                  <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center border-b border-concrete overflow-hidden">
-                    <div className="relative w-full h-full">
-                      <img src="/img/product_snack.png" alt={product.name} className="w-full h-full object-cover opacity-90 mix-blend-darken hover:scale-105 transition-transform duration-500" />
+                  <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center border-b border-concrete overflow-hidden p-6">
+                    <div className="relative w-full h-full flex items-center justify-center">
+                      <img src="/img/product_snack.png" alt={product.name} className="max-w-full max-h-full object-contain opacity-90 mix-blend-darken hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
 
