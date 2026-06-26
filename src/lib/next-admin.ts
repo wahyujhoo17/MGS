@@ -49,14 +49,6 @@ export const options: NextAdminOptions = {
         display: ["slug", "name", "description", "isSelfProduced", "category", "variants"],
         hooks: {
           beforeDb: async (data, mode, request) => {
-            // Map custom field 'category' string value (category ID) to the Prisma relation connect format
-            if (typeof (data as any).category === "string" && (data as any).category) {
-              (data as any).category = {
-                connect: {
-                  id: (data as any).category
-                }
-              };
-            }
 
             const variantsStr = (data as any).variants;
             if (typeof variantsStr === "string") {
