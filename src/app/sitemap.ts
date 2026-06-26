@@ -1,10 +1,24 @@
 import { MetadataRoute } from "next";
+import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mgsjayaabadi.com";
+  let baseUrl = "https://mgs.my.id";
+  try {
+    const headersList = await headers();
+    const host = headersList.get("host");
+    const proto = headersList.get("x-forwarded-proto") || "https";
+    if (host) {
+      baseUrl = `${proto}://${host}`;
+    }
+  } catch (e) {
+    console.error("Failed to read headers for sitemap:", e);
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    }
+  }
 
   let productEntries: any[] = [];
   try {

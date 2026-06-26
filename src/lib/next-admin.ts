@@ -1,5 +1,5 @@
 import { NextAdminOptions } from "@premieroctet/next-admin";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import sharp from "sharp";
 import React from "react";
@@ -20,6 +20,37 @@ const s3Client = new S3Client({
   forcePathStyle: true, // Typically required for MinIO/custom S3
 });
 
+// Helper function to delete an image URL from S3
+async function deleteS3Image(url: string | null | undefined) {
+  if (!url) return;
+  const publicUrl = process.env.S3_PUBLIC_URL || "";
+  let key: string | null = null;
+  if (url.startsWith(publicUrl)) {
+    key = url.replace(publicUrl, "").replace(/^\/+/, "");
+  } else {
+    try {
+      const parsed = new URL(url);
+      key = decodeURIComponent(parsed.pathname.replace(/^\/+/, ""));
+    } catch (e) {
+      // Not a valid URL
+    }
+  }
+
+  if (key) {
+    try {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.S3_BUCKET,
+          Key: key,
+        })
+      );
+      console.log(`Deleted S3 object: ${key}`);
+    } catch (err) {
+      console.error(`Failed to delete S3 object: ${key}`, err);
+    }
+  }
+}
+
 export const options: NextAdminOptions = {
   title: "MGS Admin Panel",
   externalLinks: [
@@ -32,6 +63,21 @@ export const options: NextAdminOptions = {
     Product: {
       title: "Produk",
       toString: (product: any) => product.name,
+      middlewares: {
+        delete: async (product: any) => {
+          // Fetch all variants of the product
+          const variants = await prisma.productVariant.findMany({
+            where: { productId: product.id }
+          });
+          // Delete all variant images from S3
+          for (const variant of variants) {
+            if (variant.imageUrl) {
+              await deleteS3Image(variant.imageUrl);
+            }
+          }
+          return true;
+        }
+      },
       aliases: {
         id: "ID",
         name: "Nama Produk",
@@ -67,6 +113,25 @@ export const options: NextAdminOptions = {
             const productId = response.createdId || response.data?.id;
 
             if (productId) {
+              // Fetch old variants to compare with new ones
+              const oldVariants = await prisma.productVariant.findMany({
+                where: { productId }
+              });
+
+              // Track new image URLs
+              const newImageUrls = new Set(
+                (variants || [])
+                  .map((v: any) => v.imageUrl)
+                  .filter(Boolean)
+              );
+
+              // Delete old images that are no longer in use
+              for (const oldVariant of oldVariants) {
+                if (oldVariant.imageUrl && !newImageUrls.has(oldVariant.imageUrl)) {
+                  await deleteS3Image(oldVariant.imageUrl);
+                }
+              }
+
               // Delete existing variants and insert new ones
               await prisma.productVariant.deleteMany({
                 where: { productId }
@@ -103,6 +168,14 @@ export const options: NextAdminOptions = {
     ProductVariant: {
       title: "Varian Produk",
       toString: (variant: any) => `${variant.size} - ${variant.taste} (Rp ${variant.priceRetail.toLocaleString()})`,
+      middlewares: {
+        delete: async (variant: any) => {
+          if (variant.imageUrl) {
+            await deleteS3Image(variant.imageUrl);
+          }
+          return true;
+        }
+      },
       aliases: {
         id: "ID",
         product: "Produk",
