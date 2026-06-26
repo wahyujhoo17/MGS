@@ -9,8 +9,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const headersList = await headers();
     const host = headersList.get("host");
-    const proto = headersList.get("x-forwarded-proto") || "https";
     if (host) {
+      const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+      const proto = isLocal ? "http" : "https";
       baseUrl = `${proto}://${host}`;
     }
   } catch (e) {
