@@ -63,7 +63,7 @@ export function Footer() {
       
       <div className="max-w-7xl mx-auto px-6 mt-12 md:mt-20 pt-8 border-t border-concrete flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-iron/60">
         <p>&copy; 2025 MGS Jaya Abadi. All rights reserved.</p>
-        <p>Industrial Built.</p>
+        {/* <p>Industrial Built.</p> */}
       </div>
     </footer>
   );

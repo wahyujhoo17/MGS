@@ -2,6 +2,13 @@ import { NextAdminOptions } from "@premieroctet/next-admin";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import sharp from "sharp";
+import React from "react";
+import CategorySelect from "@/components/admin/CategorySelect";
+import VariantManager from "@/components/admin/VariantManager";
+import prisma from "@/lib/prisma";
+
+// A request-scoped WeakMap to pass parsed variants from beforeDb to afterDb hooks safely
+const pendingVariants = new WeakMap<any, any[]>();
 
 const s3Client = new S3Client({
   region: process.env.S3_REGION,
@@ -32,11 +39,74 @@ export const options: NextAdminOptions = {
         description: "Deskripsi",
         isSelfProduced: "Produksi Sendiri",
         category: "Kategori",
+        categoryId: "Kategori",
         variants: "Varian Produk"
       },
       list: {
         display: ["name", "category"],
-      }
+      },
+      edit: {
+        display: ["slug", "name", "description", "isSelfProduced", "category", "variants"],
+        hooks: {
+          beforeDb: async (data, mode, request) => {
+            // Map custom field 'category' string value (category ID) to the Prisma relation connect format
+            if (typeof (data as any).category === "string" && (data as any).category) {
+              (data as any).category = {
+                connect: {
+                  id: (data as any).category
+                }
+              };
+            }
+
+            const variantsStr = (data as any).variants;
+            if (typeof variantsStr === "string") {
+              try {
+                const parsed = JSON.parse(variantsStr);
+                pendingVariants.set(request, parsed);
+              } catch (e) {
+                console.error("Failed to parse variants JSON in beforeDb:", e);
+              }
+            }
+            delete (data as any).variants;
+            return data;
+          },
+          afterDb: async (response, mode, request) => {
+            const variants = pendingVariants.get(request);
+            const productId = response.createdId || response.data?.id;
+
+            if (productId) {
+              // Delete existing variants and insert new ones
+              await prisma.productVariant.deleteMany({
+                where: { productId }
+              });
+
+              if (variants && variants.length > 0) {
+                await prisma.productVariant.createMany({
+                  data: variants.map((v: any) => ({
+                    productId,
+                    size: v.size,
+                    taste: v.taste,
+                    priceRetail: Number(v.priceRetail),
+                    priceWholesale: Number(v.priceWholesale),
+                    minOrderWholesale: Number(v.minOrderWholesale),
+                    imageUrl: v.imageUrl,
+                  }))
+                });
+              }
+            }
+            return response;
+          }
+        },
+        fields: {},
+        customFields: {
+          category: {
+            input: React.createElement(CategorySelect),
+          },
+          variants: {
+            input: React.createElement(VariantManager),
+          },
+        },
+      },
     },
     ProductVariant: {
       title: "Varian Produk",
