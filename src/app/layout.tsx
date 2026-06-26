@@ -23,6 +23,15 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "MGS Jaya Abadi — Produsen & Grosir Snack Tradisional",
   description: "Produsen dan grosir snack makanan ringan tradisional: makaroni, basreng, mie lidi. Melayani eceran dan reseller seluruh Indonesia.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+    ],
+  },
 };
 
 export default function RootLayout({
