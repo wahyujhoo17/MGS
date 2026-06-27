@@ -24,14 +24,15 @@ export default function TentangPage() {
                   <SectionEyebrow label="Tentang MGS Jaya Abadi" />
                 </div>
                 <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight mb-8 text-navy leading-[1.05]">
-                  Pabrik Rasa,<br />Pusat Snack Pedas.
+                  Pusat Snack Pedas<br />
+                  MGS JAYA ABADI
                 </h1>
                 <p className="text-xl md:text-2xl text-iron leading-relaxed mb-8 max-w-lg">
                   Mengenal lebih dekat fasilitas produksi di balik ribuan bungkus camilan gurih yang didistribusikan setiap harinya ke seluruh Indonesia.
                 </p>
               </div>
-              <div className="order-1 lg:order-2 relative aspect-[4/3] lg:aspect-square bg-charcoal w-full overflow-hidden shadow-2xl">
-                <img src="/img/spicy_factory_hero.png" alt="Pabrik Produksi UMKM MGS" className="w-full h-full object-cover" />
+              <div className="order-1 lg:order-2 relative aspect-[4/3] lg:aspect-square w-full flex items-center justify-center">
+                <img src="/img/spicy_factory_hero.png" alt="Pabrik Produksi UMKM MGS" className="w-full h-auto max-h-full object-contain filter drop-shadow-xl" />
               </div>
             </div>
           </div>
