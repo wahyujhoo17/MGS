@@ -118,16 +118,23 @@ export async function POST(req: Request) {
     });
 
     let content = response.choices[0]?.message?.content || "";
-    
-    // Ekstrak hanya blok JSON jika AI memberikan teks tambahan
-    const jsonMatch = content.match(/```json\s*\{[\s\S]*\}\s*```|\{[\s\S]*\}/);
+    let cleanedContent = content.trim();
+    // Bersihkan markdown backticks jika AI mengembalikannya
+    if (cleanedContent.startsWith("```json")) {
+      cleanedContent = cleanedContent.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+    } else if (cleanedContent.startsWith("```")) {
+      cleanedContent = cleanedContent.replace(/^```\s*/, "").replace(/\s*```$/, "");
+    }
+
+    // Ekstrak HANYA kurung kurawal terluar (mengabaikan teks basa-basi AI)
+    const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      content = jsonMatch[0];
+      cleanedContent = jsonMatch[0];
     }
 
     let parsed;
     try {
-      parsed = JSON.parse(content);
+      parsed = JSON.parse(cleanedContent);
     } catch (e) {
       console.error("Gagal parsing JSON dari AI. Raw content:", content);
       throw new Error("Format respon AI tidak valid. Coba lagi.");
