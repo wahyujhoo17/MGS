@@ -10,6 +10,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Kemitraan Grosir & Reseller — MGS Jaya Abadi",
   description: "Bergabung menjadi mitra reseller grosir snack MGS Jaya Abadi. Dapatkan harga pabrik langsung, pengiriman aman, dan margin usaha menjanjikan.",
+  alternates: {
+    canonical: "/grosir",
+  },
 };
 
 export default function GrosirPage() {
@@ -34,8 +37,25 @@ export default function GrosirPage() {
     }
   ];
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Navbar />
       <main className="flex-grow pt-20">
 

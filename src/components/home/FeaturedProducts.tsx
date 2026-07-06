@@ -28,7 +28,7 @@ export async function FeaturedProducts() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {featured.map((product) => {
             const sizes = Array.from(new Set(product.variants.map((v) => v.size)));
             const retailPrices = product.variants.map((v) => v.priceRetail);
@@ -57,32 +57,32 @@ export async function FeaturedProducts() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-5 flex flex-col flex-grow">
-                  <h3 className="font-display font-bold text-xl text-navy uppercase tracking-wide mb-1 line-clamp-1">
+                <div className="p-4 md:p-5 flex flex-col flex-grow">
+                  <h3 className="font-display font-bold text-lg md:text-xl text-navy uppercase tracking-wide mb-1 line-clamp-1">
                     {product.name}
                   </h3>
-                  <p className="text-iron text-sm mb-4 line-clamp-1">
+                  <p className="text-iron text-xs md:text-sm mb-3 md:mb-4 line-clamp-1">
                     {product.variants.length} Varian | {sizes.join(" · ")}
                   </p>
 
-                  <hr className="mb-4" />
+                  <hr className="mb-3 md:mb-4" />
 
-                  <div className="mb-6">
-                    <div className="text-royal font-semibold text-lg">
+                  <div className="mb-4 md:mb-6">
+                    <div className="text-royal font-semibold text-base md:text-lg">
                       {minPrice === maxPrice
                         ? `Rp ${minPrice.toLocaleString("id-ID")}`
                         : `Rp ${minPrice.toLocaleString("id-ID")} - Rp ${maxPrice.toLocaleString("id-ID")}`
                       }
-                      <span className="text-sm text-iron font-normal"> / pcs</span>
+                      <span className="text-xs md:text-sm text-iron font-normal"> / pcs</span>
                     </div>
-                    <div className="text-iron text-sm">
+                    <div className="text-iron text-xs md:text-sm">
                       Mulai Rp {minPriceWholesale.toLocaleString("id-ID")} (grosir)
                     </div>
                   </div>
 
                   <Link href={`/produk/${product.slug}`} className="mt-auto">
-                    <Button variant="dark" size="full">
-                      Lihat Detail →
+                    <Button variant="dark" size="sm" className="w-full">
+                      Lihat Detail
                     </Button>
                   </Link>
                 </div>

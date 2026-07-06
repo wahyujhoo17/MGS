@@ -22,14 +22,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!product) return {};
 
-  const imageUrl = product.variants[0]?.imageUrl || "/img/product_snack.png";
-  const fullImageUrl = imageUrl.startsWith("http")
-    ? imageUrl
-    : `/img/product_snack.png`; // Fallback to public folder path for local dynamic URLs or absolute paths if configured
+  const rawImageUrl = product.variants[0]?.imageUrl || "/img/product_snack.png";
+  const imageUrl = rawImageUrl.startsWith("http")
+    ? rawImageUrl
+    : `https://mgs.my.id${rawImageUrl.startsWith("/") ? "" : "/"}${rawImageUrl}`;
 
   return {
     title: `${product.name} — MGS Jaya Abadi`,
     description: `Beli ${product.name} langsung dari produsen snack MGS Jaya Abadi. ${product.description}. Dapatkan harga eceran atau grosir termurah.`,
+    alternates: {
+      canonical: `/produk/${product.slug}`,
+    },
     openGraph: {
       title: `${product.name} — MGS Jaya Abadi`,
       description: `Beli ${product.name} langsung dari produsen snack MGS Jaya Abadi. ${product.description}. Dapatkan harga eceran atau grosir termurah.`,
@@ -54,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   const resolvedParams = await params;
-  
+
   const product = await prisma.product.findUnique({
     where: { slug: resolvedParams.slug },
     include: {
@@ -71,5 +74,42 @@ export default async function ProductDetailPage({ params }: Props) {
     notFound();
   }
 
-  return <ProductDetailClient product={product} />;
+  const lowestPrice = product.variants[0]?.priceRetail ?? 0;
+  const highestPrice = product.variants[product.variants.length - 1]?.priceRetail ?? 0;
+  const firstVariantImage = product.variants[0]?.imageUrl;
+  const schemaImageUrl = firstVariantImage
+    ? (firstVariantImage.startsWith("http") ? firstVariantImage : `https://mgs.my.id${firstVariantImage.startsWith("/") ? "" : "/"}${firstVariantImage}`)
+    : "https://mgs.my.id/img/product_snack.png";
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "description": product.description,
+    "image": schemaImageUrl,
+    "sku": product.slug,
+    "brand": {
+      "@type": "Brand",
+      "name": "MGS Jaya Abadi"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "IDR",
+      "lowPrice": lowestPrice,
+      "highPrice": highestPrice,
+      "offerCount": product.variants.length,
+      "availability": "https://schema.org/InStock",
+      "url": `https://mgs.my.id/produk/${product.slug}`
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <ProductDetailClient product={product} />
+    </>
+  );
 }

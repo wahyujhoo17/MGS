@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Katalog Snack Tradisional — MGS Jaya Abadi",
   description: "Temukan katalog lengkap produk snack tradisional kami: makaroni pedas daun jeruk, basreng nendang, mie lidi, keripik pedas. Melayani grosir dan eceran.",
+  alternates: {
+    canonical: "/produk",
+  },
 };
 
 export const dynamic = "force-dynamic";

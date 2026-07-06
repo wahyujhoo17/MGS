@@ -8,6 +8,9 @@ import Image from 'next/image';
 export const metadata: Metadata = {
   title: "Tentang Pabrik & Produksi — MGS Jaya Abadi",
   description: "Mengenal lebih dekat pabrik produksi snack tradisional MGS Jaya Abadi. Industri UMKM lokal dengan armada ekspedisi mandiri yang mengutamakan kualitas, kebersihan, dan amanah.",
+  alternates: {
+    canonical: "/tentang",
+  },
 };
 
 export default function TentangPage() {

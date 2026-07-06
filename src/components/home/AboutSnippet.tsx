@@ -29,18 +29,18 @@ export function AboutSnippet() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-y border-concrete">
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 py-8 border-y border-concrete text-center sm:text-left">
               <div>
                 <span className="block text-royal font-bold text-xl mb-2">✓</span>
-                <span className="font-barlow font-bold text-xs uppercase tracking-wider text-navy">Pabrik Sendiri</span>
+                <span className="font-barlow font-bold text-[10px] sm:text-xs uppercase tracking-wider text-navy">Pabrik Sendiri</span>
               </div>
               <div>
                 <span className="block text-royal font-bold text-xl mb-2">✓</span>
-                <span className="font-barlow font-bold text-xs uppercase tracking-wider text-navy">Bahan Pilihan</span>
+                <span className="font-barlow font-bold text-[10px] sm:text-xs uppercase tracking-wider text-navy">Bahan Pilihan</span>
               </div>
               <div>
                 <span className="block text-royal font-bold text-xl mb-2">✓</span>
-                <span className="font-barlow font-bold text-xs uppercase tracking-wider text-navy">Higienis</span>
+                <span className="font-barlow font-bold text-[10px] sm:text-xs uppercase tracking-wider text-navy">Higienis</span>
               </div>
             </div>
 

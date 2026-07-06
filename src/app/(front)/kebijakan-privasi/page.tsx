@@ -7,6 +7,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Kebijakan Privasi — MGS Jaya Abadi",
   description: "Kebijakan privasi resmi penggunaan website MGS Jaya Abadi. Kami menjaga keamanan data informasi pelanggan dan mitra dengan aman.",
+  alternates: {
+    canonical: "/kebijakan-privasi",
+  },
 };
 
 export default function KebijakanPrivasiPage() {

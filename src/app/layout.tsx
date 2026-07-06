@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "MGS Jaya Abadi",
     images: [
       {
-        url: "/img/MGS.png",
+        url: "https://mgs.my.id/img/MGS.png",
         width: 800,
         height: 600,
         alt: "Logo MGS Jaya Abadi",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "MGS Jaya Abadi — Produsen & Grosir Snack Tradisional",
     description: "Produsen dan grosir snack makanan ringan tradisional: makaroni, basreng, mie lidi. Melayani eceran dan reseller seluruh Indonesia.",
-    images: ["/img/MGS.png"],
+    images: ["https://mgs.my.id/img/MGS.png"],
   },
 };
 
@@ -66,7 +66,8 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "FoodEstablishment",
+    "@type": "LocalBusiness",
+    "additionalType": "FoodManufacturer",
     "name": "MGS Jaya Abadi",
     "image": "https://mgs.my.id/img/MGS.png",
     "logo": "https://mgs.my.id/img/MGS.png",
@@ -101,7 +102,9 @@ export default function RootLayout({
       "closes": "16:00"
     },
     "sameAs": [
-      "https://mgs.my.id"
+      "https://shopee.co.id/mgsjayaabadi",
+      "https://wa.me/6281333560417",
+      "https://maps.google.com/maps?q=MGS+Jaya+Abadi+Bojonegoro"
     ]
   };
 

@@ -13,6 +13,9 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Artikel & Info Terbaru — MGS Jaya Abadi",
   description: "Dapatkan tips bisnis kuliner, info produk camilan, peluang reseller dan grosir makanan ringan terpercaya di Indonesia dari MGS Jaya Abadi.",
+  alternates: {
+    canonical: "/artikel",
+  },
   openGraph: {
     title: "Artikel & Info Terbaru — MGS Jaya Abadi",
     description: "Tips bisnis makanan ringan, panduan kemitraan reseller, dan artikel inspiratif dari MGS Jaya Abadi.",
@@ -115,6 +118,7 @@ export default async function ArtikelPage(props: Props) {
                 });
 
                 return (
+                  
                   <article
                     key={article.id}
                     className="flex flex-col bg-white border border-concrete rounded-[4px] hover:border-royal hover:shadow-md transition-all duration-300 overflow-hidden"

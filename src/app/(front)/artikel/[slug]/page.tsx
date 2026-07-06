@@ -32,27 +32,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const plainText = stripHtml(article.content);
   const description = plainText.substring(0, 150) + "...";
 
+  let imageUrl = article.coverImage || "https://mgs.my.id/img/MGS.png";
+  if (imageUrl && !imageUrl.startsWith("http")) {
+    imageUrl = `https://mgs.my.id${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
+  }
+
   return {
     title: `${article.title} — MGS Jaya Abadi`,
     description: description,
+    alternates: {
+      canonical: `/artikel/${slug}`,
+    },
     openGraph: {
       title: article.title,
       description: description,
       type: "article",
+      url: `https://mgs.my.id/artikel/${slug}`,
       publishedTime: article.createdAt.toISOString(),
       modifiedTime: article.updatedAt.toISOString(),
-      images: article.coverImage ? [
+      images: [
         {
-          url: article.coverImage,
+          url: imageUrl,
           alt: article.title,
         }
-      ] : [],
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: description,
-      images: article.coverImage ? [article.coverImage] : [],
+      images: [imageUrl],
     }
   };
 }
@@ -66,6 +75,36 @@ export default async function ArtikelDetailPage({ params }: Props) {
   if (!article || !article.published) {
     notFound();
   }
+
+  const plainText = stripHtml(article.content);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://mgs.my.id/artikel/${article.slug}`
+    },
+    "headline": article.title,
+    "description": plainText.substring(0, 200) + "...",
+    "image": article.coverImage
+      ? (article.coverImage.startsWith("http") ? article.coverImage : `https://mgs.my.id${article.coverImage.startsWith("/") ? "" : "/"}${article.coverImage}`)
+      : "https://mgs.my.id/img/MGS.png",
+    "datePublished": article.createdAt.toISOString(),
+    "dateModified": article.updatedAt.toISOString(),
+    "author": {
+      "@type": "Organization",
+      "name": "MGS Jaya Abadi",
+      "url": "https://mgs.my.id"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "MGS Jaya Abadi",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://mgs.my.id/img/MGS.png"
+      }
+    }
+  };
 
   const formattedDate = new Date(article.createdAt).toLocaleDateString("id-ID", {
     day: "numeric",
@@ -84,6 +123,10 @@ export default async function ArtikelDetailPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
       <main className="flex-grow pt-20 bg-offwhite min-h-[100dvh]">
 

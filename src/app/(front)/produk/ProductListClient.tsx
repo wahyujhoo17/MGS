@@ -50,19 +50,19 @@ export default function ProductListClient({ initialProducts }: Props) {
       <Navbar />
       <main className="flex-grow pt-16">
         {/* Page Header */}
-        <section className="bg-offwhite pt-16 pb-24 text-navy relative border-b border-concrete">
+        <section className="bg-offwhite pt-10 pb-16 md:pt-16 md:pb-24 text-navy relative border-b border-concrete">
           <div className="max-w-7xl mx-auto px-6">
             <SectionEyebrow label="Katalog Lengkap" />
-            <h1 className="font-display font-bold text-5xl md:text-6xl uppercase tracking-tight mb-4">
+            <h1 className="font-display font-bold text-4xl md:text-6xl uppercase tracking-tight mb-4">
               Katalog Produk Kami
             </h1>
-            <p className="text-iron max-w-xl text-lg">
+            <p className="text-iron max-w-xl text-base md:text-lg">
               Dari makaroni pedas hingga basreng gurih. Temukan berbagai pilihan makanan ringan untuk konsumsi pribadi atau grosir toko Anda.
             </p>
           </div>
         </section>
 
-        <div className="bg-offwhite min-h-[50vh] pb-24">
+        <div className="bg-offwhite min-h-[50vh] pb-16 md:pb-24">
           {/* Filter Bar (Sticky) */}
           <div className="sticky top-20 z-30 bg-white border-b border-concrete py-3 shadow-sm">
             <div className="max-w-7xl mx-auto px-6">
@@ -79,13 +79,13 @@ export default function ProductListClient({ initialProducts }: Props) {
                 </div>
 
                 {/* Chips Jenis */}
-                <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-1">
+                <div className="flex w-full md:w-auto overflow-x-auto gap-2 hide-scrollbar pb-1 -mx-6 px-6 md:mx-0 md:px-0 scrollbar-none">
                   {["Semua", "Makaroni", "Basreng", "Mie-Lidi", "Keripik", "Lainnya"].map((chip) => (
                     <button
                       key={chip}
                       onClick={() => setActiveChip(chip)}
                       className={cn(
-                        "px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-[4px] whitespace-nowrap transition-colors border cursor-pointer",
+                        "px-3.5 py-2 md:px-4 md:py-1.5 text-xs font-semibold uppercase tracking-wider rounded-[4px] whitespace-nowrap transition-colors border cursor-pointer",
                         activeChip === chip
                           ? "bg-royal border-royal text-white"
                           : "bg-transparent border-concrete text-iron hover:border-iron"
@@ -100,8 +100,8 @@ export default function ProductListClient({ initialProducts }: Props) {
           </div>
 
           {/* Product Grid */}
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
@@ -119,29 +119,29 @@ export default function ProductListClient({ initialProducts }: Props) {
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 flex flex-col flex-grow">
-                    <h3 className="font-display font-bold text-xl text-navy uppercase tracking-wide mb-1 line-clamp-1">
+                  <div className="p-4 md:p-5 flex flex-col flex-grow">
+                    <h3 className="font-display font-bold text-lg md:text-xl text-navy uppercase tracking-wide mb-1 line-clamp-1">
                       {product.name}
                     </h3>
-                    <p className="text-iron text-sm mb-4 line-clamp-1">
+                    <p className="text-iron text-xs md:text-sm mb-3 md:mb-4 line-clamp-1">
                       {product.variantsCount} Varian | {product.sizes.join(", ")}
                     </p>
-                    <hr className="mb-4" />
-                    <div className="mb-6">
-                      <div className="text-royal font-semibold text-lg">
+                    <hr className="mb-3 md:mb-4" />
+                    <div className="mb-4 md:mb-6">
+                      <div className="text-royal font-semibold text-base md:text-lg">
                         {product.minPrice === product.maxPrice
                           ? `Rp ${product.minPrice.toLocaleString("id-ID")}`
                           : `Rp ${product.minPrice.toLocaleString("id-ID")} - Rp ${product.maxPrice.toLocaleString("id-ID")}`
                         }
-                        <span className="text-sm text-iron font-normal"> / pcs</span>
+                        <span className="text-xs md:text-sm text-iron font-normal"> / pcs</span>
                       </div>
-                      <div className="text-iron text-sm">
+                      <div className="text-iron text-xs md:text-sm">
                         Mulai Rp {product.minPriceWholesale.toLocaleString("id-ID")} (grosir)
                       </div>
                     </div>
                     <Link href={`/produk/${product.slug}`} className="mt-auto">
-                      <Button variant="dark" size="full">
-                        Lihat Detail →
+                      <Button variant="dark" size="sm" className="w-full">
+                        Lihat Detail
                       </Button>
                     </Link>
                   </div>

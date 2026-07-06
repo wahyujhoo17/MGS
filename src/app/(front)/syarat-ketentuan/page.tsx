@@ -7,6 +7,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Syarat & Ketentuan — MGS Jaya Abadi",
   description: "Syarat dan ketentuan pembelian snack eceran dan program reseller grosir di pabrik MGS Jaya Abadi.",
+  alternates: {
+    canonical: "/syarat-ketentuan",
+  },
 };
 
 export default function SyaratKetentuanPage() {
