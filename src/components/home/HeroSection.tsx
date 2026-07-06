@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function HeroSection() {
   return (
@@ -10,7 +11,14 @@ export function HeroSection() {
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0 flex justify-end">
         <div className="w-full lg:w-[70%] h-full relative">
-           <img src="/img/spicy_production.png" alt="Produksi Snack Pedas MGS" className="w-full h-full object-cover" />
+           <Image
+             src="/img/spicy_production.png"
+             alt="Produksi Snack Pedas MGS"
+             fill
+             priority
+             sizes="(max-width: 1024px) 100vw, 70vw"
+             className="object-cover"
+           />
            {/* Fade from left to right */}
            <div className="absolute inset-0 bg-gradient-to-r from-offwhite via-offwhite/90 lg:via-offwhite/50 to-transparent" />
            {/* Fade from bottom */}

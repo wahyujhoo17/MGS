@@ -17,8 +17,8 @@ export default async function AdminPage(props: PromisePageProps) {
   const adminProps = await getNextAdminProps({
     params: params.nextadmin,
     searchParams,
-    basePath: "/admin",
-    apiBasePath: "/api/admin",
+    basePath: "/mgs-admin",
+    apiBasePath: "/api/mgs-admin",
     prisma,
     options,
   });

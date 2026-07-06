@@ -1,27 +1,15 @@
-export function Testimonials() {
-  const testimonials = [
-    {
-      id: 1,
-      text: "Makaroninya enak, garing tahan lama. Reseller kami selalu repeat order tiap minggu! Konsistensi rasa dari MGS patut diacungi jempol.",
-      author: "Budi S.",
-      location: "Surabaya",
-      role: "Pemilik Toko Kelontong",
-    },
-    {
-      id: 2,
-      text: "Sejak bergabung jadi agen grosir MGS, perputaran barang sangat cepat. Support dari pabrik juga responsif untuk restock.",
-      author: "Ibu Siti",
-      location: "Sidoarjo",
-      role: "Agen Makanan Ringan",
-    },
-    {
-      id: 3,
-      text: "Basrengnya beda dari yang lain, bumbunya pas dan pedasnya mantap. Pengiriman selalu aman dan tepat waktu sampai ke toko.",
-      author: "Agus T.",
-      location: "Malang",
-      role: "Distributor Snack",
-    }
-  ];
+import prisma from "@/lib/prisma";
+
+export async function Testimonials() {
+  const testimonials = await prisma.testimonial.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+  });
+
+  if (testimonials.length === 0) {
+    return null; // Don't render Section if there are no active testimonials
+  }
 
   return (
     <section className="bg-offwhite py-24 border-t border-concrete">
@@ -36,7 +24,10 @@ export function Testimonials() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testi) => (
             <div key={testi.id} className="bg-white p-8 border-l-4 border-royal shadow-sm">
-              <div className="text-royal text-xl mb-4 tracking-widest">★★★★★</div>
+              <div className="text-royal text-xl mb-4 tracking-widest">
+                {"★".repeat(testi.rating)}
+                {"☆".repeat(Math.max(0, 5 - testi.rating))}
+              </div>
               <p className="text-iron leading-relaxed mb-8 italic">
                 &quot;{testi.text}&quot;
               </p>

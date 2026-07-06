@@ -60,3 +60,15 @@ model Admin {
   updatedAt DateTime @updatedAt
 }
 
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  location  String
+  role      String
+  text      String
+  rating    Int      @default(5)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

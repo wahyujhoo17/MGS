@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { buildWALink, productOrderMessage } from "@/lib/whatsapp";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface Variant {
   id: string;
@@ -106,11 +107,13 @@ export default function ProductDetailClient({ product }: Props) {
             {/* Gallery */}
             <div className="space-y-4">
               <div className="aspect-square bg-offwhite border border-concrete p-0 flex items-center justify-center overflow-hidden">
-                <div className="w-full h-full bg-white flex items-center justify-center">
-                  <img
+                <div className="w-full h-full bg-white flex items-center justify-center relative">
+                  <Image
                     src={imageUrl}
                     alt={product.name}
-                    className="w-full h-full object-cover mix-blend-darken"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover mix-blend-darken"
                   />
                 </div>
               </div>
@@ -229,9 +232,13 @@ export default function ProductDetailClient({ product }: Props) {
                 <Button
                   variant="ghost"
                   size="full"
-                  className="border border-concrete text-iron hover:bg-offwhite cursor-pointer"
+                  className="border border-concrete text-iron hover:bg-offwhite cursor-pointer relative"
+                  onClick={() => alert("Katalog PDF sedang dalam proses pembuatan. Silakan hubungi kami via WhatsApp untuk mendapatkan daftar harga dan katalog terbaru!")}
                 >
                   Download Katalog PDF
+                  <span className="absolute -top-2 -right-2 text-[10px] bg-royal text-white font-bold px-1.5 py-0.5 uppercase tracking-wider rounded-[4px]">
+                    Segera Hadir
+                  </span>
                 </Button>
               </div>
             </div>

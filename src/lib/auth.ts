@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 const encoder = new TextEncoder();
 
 function arrayBufferToHex(buffer: ArrayBuffer): string {
@@ -34,9 +36,11 @@ async function getCryptoKey(secret: string) {
 }
 
 export async function hashPassword(password: string): Promise<string> {
-  const msgUint8 = encoder.encode(password + "mgs-salt-key-2026");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-  return arrayBufferToHex(hashBuffer);
+  return await bcrypt.hash(password, 12);
+}
+
+export async function comparePassword(password: string, hash: string): Promise<boolean> {
+  return await bcrypt.compare(password, hash);
 }
 
 export async function signSession(payload: any, secret: string): Promise<string> {
@@ -46,6 +50,16 @@ export async function signSession(payload: any, secret: string): Promise<string>
   const hexSignature = arrayBufferToHex(signature);
   const base64Data = base64urlEncode(data);
   return `${base64Data}.${hexSignature}`;
+}
+
+export function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error(
+      "JWT_SECRET environment variable is missing. Please set it in your local env configuration."
+    );
+  }
+  return secret;
 }
 
 export async function verifySession(token: string, secret: string): Promise<any | null> {

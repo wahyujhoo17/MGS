@@ -65,7 +65,7 @@ export default function VariantManager({ name, value, onChange, disabled, readon
 
   const fetchVariants = async (prodId: string) => {
     try {
-      const res = await fetch(`/api/admin/variants?productId=${prodId}`);
+      const res = await fetch(`/api/mgs-admin/variants?productId=${prodId}`);
       if (res.ok) {
         const data = await res.json();
         setVariants(data);
@@ -110,7 +110,7 @@ export default function VariantManager({ name, value, onChange, disabled, readon
     reader.onloadend = async () => {
       const base64String = reader.result as string;
       try {
-        const res = await fetch("/api/admin/upload", {
+        const res = await fetch("/api/mgs-admin/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ base64: base64String }),

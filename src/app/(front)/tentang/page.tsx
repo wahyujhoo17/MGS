@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: "Tentang Pabrik & Produksi — MGS Jaya Abadi",
@@ -31,8 +32,14 @@ export default function TentangPage() {
                   Mengenal lebih dekat fasilitas produksi di balik ribuan bungkus camilan gurih yang didistribusikan setiap harinya ke seluruh Indonesia.
                 </p>
               </div>
-              <div className="order-1 lg:order-2 relative aspect-[4/3] lg:aspect-square w-full flex items-center justify-center">
-                <img src="/img/spicy_factory_hero.png" alt="Pabrik Produksi UMKM MGS" className="w-full h-auto max-h-full object-contain filter drop-shadow-xl" />
+              <div className="order-1 lg:order-2 relative aspect-[4/3] lg:aspect-square w-full">
+                <Image
+                  src="/img/spicy_factory_hero.png"
+                  alt="Pabrik Produksi UMKM MGS"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain filter drop-shadow-xl"
+                />
               </div>
             </div>
           </div>
@@ -43,7 +50,13 @@ export default function TentangPage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
               <div className="relative aspect-[4/3] bg-charcoal w-full overflow-hidden shadow-xl group">
-                <img src="/img/team_mgs.jpg" alt="Tim Produksi UMKM MGS" className="w-full h-full object-cover filter sepia-[0.3] hover:sepia-0 transition-all duration-700 hover:scale-105" />
+                <Image
+                  src="/img/team_mgs.jpg"
+                  alt="Tim Produksi UMKM MGS"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover filter sepia-[0.3] hover:sepia-0 transition-all duration-700 hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-navy/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none"></div>
               </div>
               <div>
@@ -75,11 +88,17 @@ export default function TentangPage() {
             <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
                {/* Image Side */}
                <div className="w-full lg:w-1/2 relative">
-                  <div className="aspect-[4/3] bg-white w-full overflow-hidden shadow-2xl relative flex items-center justify-center p-8">
-                     <img src="/img/truck_delivery.jpg" alt="Armada Logistik MGS" className="w-full h-auto object-contain scale-110" />
+                  <div className="aspect-[4/3] bg-white w-full overflow-hidden shadow-2xl relative">
+                     <Image
+                       src="/img/truck_delivery.jpg"
+                       alt="Armada Logistik MGS"
+                       fill
+                       sizes="(max-width: 1024px) 100vw, 50vw"
+                       className="object-cover scale-110"
+                     />
                   </div>
                   {/* Floating Stat Card */}
-                  <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 bg-white p-6 md:p-8 shadow-xl border border-concrete max-w-[240px]">
+                  <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 bg-white p-6 md:p-8 shadow-xl border border-concrete max-w-[240px] z-10">
                      <div className="font-display font-black text-4xl text-navy uppercase mb-1">Seluruh<br/><span className="text-royal">Jawa</span></div>
                      <p className="text-iron font-barlow text-sm uppercase tracking-widest">Jangkauan Ekspedisi</p>
                   </div>
@@ -167,11 +186,27 @@ export default function TentangPage() {
             </h2>
             <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-80 hover:opacity-100 transition-opacity duration-300">
                <div className="flex flex-col items-center gap-4">
-                  <img src="/img/logo_halal.svg" alt="Sertifikat Halal Indonesia" className="h-20 md:h-24 w-auto object-contain" />
+                  <div className="h-20 md:h-24 w-24 relative">
+                    <Image
+                      src="/img/logo_halal.svg"
+                      alt="Sertifikat Halal Indonesia"
+                      fill
+                      sizes="100px"
+                      className="object-contain"
+                    />
+                  </div>
                   <span className="font-barlow font-semibold text-[10px] uppercase tracking-widest text-iron">Tersertifikasi Halal</span>
                </div>
                <div className="flex flex-col items-center gap-4">
-                  <img src="/img/logo_bkpm.png" alt="NIB OSS BKPM" className="h-16 md:h-20 w-auto object-contain" />
+                  <div className="h-16 md:h-20 w-32 relative">
+                    <Image
+                      src="/img/logo_bkpm.png"
+                      alt="NIB OSS BKPM"
+                      fill
+                      sizes="150px"
+                      className="object-contain"
+                    />
+                  </div>
                   <span className="font-barlow font-semibold text-[10px] uppercase tracking-widest text-iron">NIB Terdaftar</span>
                </div>
                <div className="flex flex-col items-center gap-4">

@@ -8,6 +8,7 @@ import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
 interface MappedProduct {
   id: string;
@@ -108,10 +109,12 @@ export default function ProductListClient({ initialProducts }: Props) {
                 >
                   {/* Image */}
                   <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center border-b border-concrete overflow-hidden">
-                    <img
+                    <Image
                       src={product.imageUrl}
                       alt={product.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover hover:scale-105 transition-transform duration-500"
                     />
                   </div>
 

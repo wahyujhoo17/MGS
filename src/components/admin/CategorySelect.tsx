@@ -19,7 +19,7 @@ export default function CategorySelect({ name, value, onChange, disabled, readon
   const selectedId = typeof value === "object" && value !== null ? ((value as any).id || "") : (value || "");
 
   useEffect(() => {
-    fetch("/api/admin/categories")
+    fetch("/api/mgs-admin/categories")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -52,7 +52,7 @@ export default function CategorySelect({ name, value, onChange, disabled, readon
     setSavingCat(true);
 
     try {
-      const res = await fetch("/api/admin/categories", {
+      const res = await fetch("/api/mgs-admin/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newCatName }),

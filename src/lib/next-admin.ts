@@ -225,6 +225,27 @@ export const options: NextAdminOptions = {
       list: {
         display: ["name", "slug"],
       }
+    },
+    Testimonial: {
+      title: "Testimonial Pelanggan",
+      toString: (testi: any) => `${testi.author} (${testi.location})`,
+      aliases: {
+        id: "ID",
+        author: "Nama Penulis",
+        location: "Asal Kota",
+        role: "Pekerjaan/Status",
+        text: "Isi Testimonial",
+        rating: "Bintang / Rating (1-5)",
+        isActive: "Ditampilkan di Web",
+        createdAt: "Tanggal Dibuat",
+        updatedAt: "Terakhir Diperbarui"
+      },
+      list: {
+        display: ["author", "location", "role", "rating", "isActive"],
+      },
+      edit: {
+        display: ["author", "location", "role", "text", "rating", "isActive"]
+      }
     }
   }
 };

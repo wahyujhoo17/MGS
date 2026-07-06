@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function AboutSnippet() {
   return (
     <section className="bg-white py-16 md:py-24 lg:py-32 text-navy overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-center">
-          
+
           <div className="order-2 lg:order-1 space-y-6 md:space-y-8">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-iron/20 shadow-sm mb-4 md:mb-6">
@@ -43,8 +44,8 @@ export function AboutSnippet() {
               </div>
             </div>
 
-            <Link 
-              href="/tentang" 
+            <Link
+              href="/tentang"
               className="inline-flex items-center font-barlow font-bold text-sm uppercase tracking-widest text-navy hover:text-royal transition-colors"
             >
               Pelajari Lebih Lanjut <span className="ml-2 font-bold text-lg leading-none">→</span>
@@ -53,7 +54,13 @@ export function AboutSnippet() {
 
           <div className="order-1 lg:order-2 relative">
              <div className="w-full aspect-[4/3] bg-charcoal relative overflow-hidden">
-                <img src="/img/umkm_factory.png" alt="Fasilitas Produksi MGS" className="w-full h-full object-cover opacity-90" />
+                <Image
+                  src="/img/umkm_factory.png"
+                  alt="Fasilitas Produksi MGS"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover opacity-90"
+                />
              </div>
           </div>
 

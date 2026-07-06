@@ -23,6 +23,7 @@ export function Footer() {
             <ul className="space-y-4">
               <li><Link href="/produk" className="hover:text-royal transition-colors">Semua Produk</Link></li>
               <li><Link href="/tentang" className="hover:text-royal transition-colors">Tentang Kami</Link></li>
+              <li><Link href="/grosir" className="hover:text-royal transition-colors">Kemitraan Grosir</Link></li>
               <li><Link href="/kontak" className="hover:text-royal transition-colors">Hubungi Kami</Link></li>
             </ul>
           </div>
@@ -44,8 +45,8 @@ export function Footer() {
             <address className="not-italic text-sm space-y-4 text-iron/80">
               <p>
                 <strong className="text-navy block font-semibold mb-1">Pabrik & Gudang</strong>
-                Jl. Industri No. 45<br />
-                Surabaya, Jawa Timur
+                RT.10/RW.03, Simo, Sumuragung<br />
+                Kec. Baureno, Bojonegoro, Jawa Timur 62192
               </p>
               <p>
                 <strong className="text-navy block font-semibold mb-1">Telepon / WhatsApp</strong>
@@ -60,10 +61,14 @@ export function Footer() {
 
         </div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-6 mt-12 md:mt-20 pt-8 border-t border-concrete flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-iron/60">
-        <p>&copy; 2025 MGS Jaya Abadi. All rights reserved.</p>
-        {/* <p>Industrial Built.</p> */}
+        <p>&copy; {new Date().getFullYear()} MGS Jaya Abadi. All rights reserved.</p>
+        <div className="flex gap-4">
+          <Link href="/kebijakan-privasi" className="hover:text-royal transition-colors">Kebijakan Privasi</Link>
+          <span>&middot;</span>
+          <Link href="/syarat-ketentuan" className="hover:text-royal transition-colors">Syarat & Ketentuan</Link>
+        </div>
       </div>
     </footer>
   );

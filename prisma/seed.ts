@@ -165,6 +165,46 @@ async function main() {
   });
   console.log('Admin account seeded: admin / admin123');
 
+  // Seed Testimonials
+  const testimonialsData = [
+    {
+      author: "Budi S.",
+      location: "Surabaya",
+      role: "Pemilik Toko Kelontong",
+      text: "Makaroninya enak, garing tahan lama. Reseller kami selalu repeat order tiap minggu! Konsistensi rasa dari MGS patut diacungi jempol.",
+      rating: 5,
+    },
+    {
+      author: "Ibu Siti",
+      location: "Sidoarjo",
+      role: "Agen Makanan Ringan",
+      text: "Sejak bergabung jadi agen grosir MGS, perputaran barang sangat cepat. Support dari pabrik juga responsif untuk restock.",
+      rating: 5,
+    },
+    {
+      author: "Agus T.",
+      location: "Malang",
+      role: "Distributor Snack",
+      text: "Basrengnya beda dari yang lain, bumbunya pas dan pedasnya mantap. Pengiriman selalu aman dan tepat waktu sampai ke toko.",
+      rating: 5,
+    }
+  ];
+
+  await prisma.testimonial.deleteMany({});
+  for (const testi of testimonialsData) {
+    await prisma.testimonial.create({
+      data: {
+        author: testi.author,
+        location: testi.location,
+        role: testi.role,
+        text: testi.text,
+        rating: testi.rating,
+        isActive: true,
+      }
+    });
+  }
+  console.log('Testimonials seeded successfully!');
+
   console.log('Database seeded successfully!');
 }
 

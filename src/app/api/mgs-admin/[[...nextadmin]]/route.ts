@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { options } from "@/lib/next-admin";
 
 const { run } = createHandler({
-  apiBasePath: "/api/admin",
+  apiBasePath: "/api/mgs-admin",
   prisma,
   options,
 });

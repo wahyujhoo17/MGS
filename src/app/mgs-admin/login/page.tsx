@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { verifySession } from "@/lib/auth";
+import { verifySession, getJwtSecret } from "@/lib/auth";
 import LoginForm from "./LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -10,10 +10,10 @@ export default async function LoginPage() {
   const sessionToken = cookieStore.get("mgs_session")?.value;
 
   if (sessionToken) {
-    const secret = process.env.JWT_SECRET || "super-secret-mgs-admin-token-key-2026-secure";
+    const secret = getJwtSecret();
     const session = await verifySession(sessionToken, secret);
     if (session) {
-      redirect("/admin");
+      redirect("/mgs-admin");
     }
   }
 

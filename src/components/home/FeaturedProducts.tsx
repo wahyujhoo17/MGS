@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import Image from "next/image";
 
 export async function FeaturedProducts() {
   const featured = await prisma.product.findMany({
@@ -33,10 +34,10 @@ export async function FeaturedProducts() {
             const retailPrices = product.variants.map((v) => v.priceRetail);
             const minPrice = retailPrices.length ? Math.min(...retailPrices) : 0;
             const maxPrice = retailPrices.length ? Math.max(...retailPrices) : 0;
-            
+
             const wholesalePrices = product.variants.map((v) => v.priceWholesale);
             const minPriceWholesale = wholesalePrices.length ? Math.min(...wholesalePrices) : 0;
-            
+
             const imageUrl = product.variants[0]?.imageUrl || "/img/product_snack.png";
 
             return (
@@ -46,10 +47,12 @@ export async function FeaturedProducts() {
               >
                 {/* Product Image Area */}
                 <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center border-b border-concrete overflow-hidden">
-                  <img
+                  <Image
                     src={imageUrl}
                     alt={product.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 
