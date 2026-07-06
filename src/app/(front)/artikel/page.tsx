@@ -24,11 +24,27 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, "");
 }
 
-export default async function ArtikelPage() {
-  const articles = await prisma.article.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-  });
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function ArtikelPage(props: Props) {
+  const searchParams = await props.searchParams;
+  const page = typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
+  const take = 9;
+  const skip = (page > 0 ? page - 1 : 0) * take;
+
+  const [articles, totalCount] = await Promise.all([
+    prisma.article.findMany({
+      where: { published: true },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+    }),
+    prisma.article.count({ where: { published: true } })
+  ]);
+
+  const totalPages = Math.ceil(totalCount / take);
 
   return (
     <>
@@ -147,6 +163,31 @@ export default async function ArtikelPage() {
                   </article>
                 );
               })}
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="mt-16 flex items-center justify-center gap-2">
+              {page > 1 && (
+                <Link
+                  href={`/artikel?page=${page - 1}`}
+                  className="px-5 py-2.5 text-xs font-bold bg-white border border-concrete text-navy hover:border-royal hover:text-royal transition-all rounded-[4px] uppercase tracking-widest"
+                >
+                  &larr; Sebelumnya
+                </Link>
+              )}
+              <div className="px-5 py-2.5 text-xs font-bold text-iron bg-offwhite border border-concrete rounded-[4px] uppercase tracking-widest">
+                Hal {page} / {totalPages}
+              </div>
+              {page < totalPages && (
+                <Link
+                  href={`/artikel?page=${page + 1}`}
+                  className="px-5 py-2.5 text-xs font-bold bg-white border border-concrete text-navy hover:border-royal hover:text-royal transition-all rounded-[4px] uppercase tracking-widest"
+                >
+                  Selanjutnya &rarr;
+                </Link>
+              )}
             </div>
           )}
         </section>

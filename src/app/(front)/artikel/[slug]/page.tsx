@@ -109,23 +109,23 @@ export default async function ArtikelDetailPage({ params }: Props) {
             </Link>
           </div>
 
-          <div className="bg-white border border-concrete rounded-[4px] p-6 sm:p-12 shadow-sm">
+          <div className="bg-white border border-concrete rounded-[4px] p-6 sm:p-10 md:p-12 shadow-sm">
             {/* Header */}
             <header className="mb-8 pb-6 border-b border-concrete text-left">
-              <span className="font-barlow text-[10px] font-bold text-royal uppercase tracking-widest block mb-3">
+              <span className="font-barlow text-[11px] font-bold text-royal uppercase tracking-widest block mb-3">
                 {formattedDate} • Info Resmi
               </span>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl text-navy uppercase leading-tight tracking-tight">
+              <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-navy uppercase leading-tight md:leading-tight tracking-tight">
                 {article.title}
               </h1>
-              <div className="mt-4 flex items-center text-xs font-semibold text-iron uppercase tracking-wider font-barlow">
-                <span>Diposkan oleh Admin Pemasaran</span>
+              <div className="mt-5 flex items-center text-xs font-semibold text-iron uppercase tracking-wider font-barlow">
+                <span>Tim Redaksi MGS Jaya Abadi</span>
               </div>
             </header>
 
             {/* Cover Image */}
             {article.coverImage && (
-              <div className="relative w-full aspect-[16/9] rounded-[4px] border border-concrete overflow-hidden mb-10 shadow-sm">
+              <figure className="relative w-full aspect-[16/9] rounded-[4px] border border-concrete/50 overflow-hidden mb-10 shadow-sm">
                 <Image
                   src={article.coverImage}
                   alt={article.title}
@@ -134,13 +134,13 @@ export default async function ArtikelDetailPage({ params }: Props) {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 900px"
                 />
-              </div>
+              </figure>
             )}
 
             {/* Article Content Rendered */}
             <div className="article-content max-w-none text-left mb-12">
               <div
-                className="text-iron break-words text-[15px] sm:text-[16px]"
+                className="text-[#4a5568] break-words text-[16px] sm:text-[17px] leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
             </div>

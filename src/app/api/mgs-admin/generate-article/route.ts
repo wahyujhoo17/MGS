@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import prisma from "@/lib/prisma";
 
 const openai = new OpenAI({
   apiKey: process.env.CUSTOM_AI_API_KEY || "YOUR_API_KEY",
@@ -21,7 +22,8 @@ ATURAN ANTI-DETEKTOR AI (WAJIB DIPATUHI AGAR SKOR AI DI BAWAH 50%):
 3. KETIDAKSEMPURNAAN NATURAL & BAHASA LISAN: Selipkan bahasa sehari-hari atau idiom lokal sesekali (misal: "ya", "sih", "kok", "kan", "bikin pusing", "cuan", "nggak masuk akal", "jujur saja"). Jangan gunakan bahasa Indonesia yang 100% kaku seperti buku cetak.
 4. DETAIL SPESIFIK: Manusia mengingat detail, AI merangkum. Jangan gunakan frasa umum seperti "mengalami banyak tantangan". Gunakan cerita spesifik seperti "susahnya mencari tepung tapioka murah di pasar minggu lalu".
 5. TANPA KESIMPULAN KAKU: Akhiri tulisan dengan opini santai, pertanyaan retoris, atau sekadar harapan ke depan. JANGAN pernah membuat paragraf rangkuman "Secara keseluruhan..." atau "Sebagai penutup...".
-6. Sapa pembaca sesekali dengan "Sobat pebisnis" atau "Teman-teman UMKM".
+6. KERAPIAN FORMAT & INTERNAL LINK: Walaupun gaya bahasa Anda santai, susunan HTML artikel harus SANGAT RAPI dan MUDAH DIBACA (banyak Heading <h2> <h3>, Bullet Points <ul>, dan pisahkan paragraf agar tidak terlalu panjang). JIKA saya memberikan "REFERENSI INTERNAL LINK", Anda WAJIB menyelipkan 1 atau 2 link tersebut secara natural di tengah-tengah artikel menggunakan kode HTML ini: <blockquote class="border-l-4 border-indigo-600 pl-4 py-2 my-6 bg-indigo-50 rounded-r-lg"><strong>Baca juga: <a href="URL_ARTIKEL" class="text-indigo-700 hover:underline">JUDUL_ARTIKEL</a></strong></blockquote>
+7. Sapa pembaca sesekali dengan "Sobat pebisnis" atau "Teman-teman UMKM".
 
 KEMAMPUAN BROWSING (RAG): Jika diberikan Data Pencarian Web Aktual, lebur datanya ke dalam cerita seolah-olah Anda baru saja membacanya dari koran atau obrolan pasar hari ini. JANGAN sebutkan "Berdasarkan data pencarian web".
 
@@ -81,7 +83,25 @@ export async function POST(req: Request) {
       searchContext = `\n\nBERIKUT ADALAH DATA PENCARIAN WEB TERKINI TENTANG TOPIK INI. GUNAKAN DATA INI (ANGKA, FAKTA, TREN) SEBAGAI REFERENSI UTAMA DALAM ARTIKEL:\n${searchResults}`;
     }
 
-    const userMessage = `Topik/Instruksi Artikel: ${prompt}${searchContext}`;
+    let internalLinkContext = "";
+    try {
+      const existingArticles = await prisma.article.findMany({
+        where: { published: true },
+        select: { title: true, slug: true },
+        take: 3,
+        orderBy: { createdAt: "desc" }
+      });
+      if (existingArticles.length > 0) {
+        internalLinkContext = "\n\nREFERENSI INTERNAL LINK (Sisipkan 1 atau 2 link ini di tengah artikel dengan format blockquote sesuai aturan):\n";
+        existingArticles.forEach(a => {
+          internalLinkContext += `- Judul: ${a.title} | URL: /artikel/${a.slug}\n`;
+        });
+      }
+    } catch (e) {
+      console.error("Gagal mengambil artikel untuk internal link", e);
+    }
+
+    const userMessage = `Topik/Instruksi Artikel: ${prompt}${searchContext}${internalLinkContext}`;
     const model = process.env.CUSTOM_AI_MODEL || "gpt-4o-mini";
 
     const response = await openai.chat.completions.create({
