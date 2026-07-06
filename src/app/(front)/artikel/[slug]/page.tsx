@@ -179,26 +179,26 @@ export default async function ArtikelDetailPage({ params }: Props) {
               <h3 className="font-display font-bold text-2xl text-navy uppercase mb-8">
                 Artikel MGS Lainnya
               </h3>
-              <div className="grid gap-6 sm:grid-cols-3">
+              <div className="grid grid-cols-3 gap-2 sm:gap-6">
                 {recentArticles.map((recent) => (
-                  <div key={recent.id} className="group bg-white border border-concrete p-4 rounded-[4px] hover:border-royal hover:shadow-md transition-all duration-300">
+                  <div key={recent.id} className="group bg-white border border-concrete p-2 sm:p-4 rounded-[4px] hover:border-royal hover:shadow-md transition-all duration-300">
                     <Link href={`/artikel/${recent.slug}`} className="block">
-                      <div className="relative aspect-[16/10] w-full rounded-[4px] overflow-hidden bg-offwhite mb-4 border border-concrete">
+                      <div className="relative aspect-[16/10] w-full rounded-[4px] overflow-hidden bg-offwhite mb-2 sm:mb-4 border border-concrete">
                         {recent.coverImage ? (
                           <Image
                             src={recent.coverImage}
                             alt={recent.title}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="(max-width: 640px) 100vw, 250px"
+                            sizes="(max-width: 640px) 33vw, 250px"
                           />
                         ) : (
-                          <div className="h-full w-full flex items-center justify-center text-xs text-iron/40 font-mono italic">
+                          <div className="h-full w-full flex items-center justify-center text-[10px] sm:text-xs text-iron/40 font-mono italic">
                             No Image
                           </div>
                         )}
                       </div>
-                      <h4 className="font-display font-bold text-base text-navy group-hover:text-royal line-clamp-2 transition-colors uppercase leading-snug">
+                      <h4 className="font-display font-bold text-[10px] sm:text-base text-navy group-hover:text-royal line-clamp-2 transition-colors uppercase leading-tight sm:leading-snug">
                         {recent.title}
                       </h4>
                     </Link>
