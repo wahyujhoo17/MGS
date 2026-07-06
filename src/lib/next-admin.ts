@@ -5,6 +5,7 @@ import sharp from "sharp";
 import React from "react";
 import CategorySelect from "@/components/admin/CategorySelect";
 import VariantManager from "@/components/admin/VariantManager";
+import ArticleRichEditor from "@/components/admin/ArticleRichEditor";
 import prisma from "@/lib/prisma";
 
 // A request-scoped WeakMap to pass parsed variants from beforeDb to afterDb hooks safely
@@ -84,6 +85,7 @@ export const options: NextAdminOptions = {
         slug: "Slug",
         description: "Deskripsi",
         isSelfProduced: "Produksi Sendiri",
+        shopeeUrl: "URL Shopee Produk (Kosongkan jika ingin menggunakan default link toko MGS)",
         category: "Kategori",
         categoryId: "Kategori",
         variants: "Varian Produk"
@@ -92,7 +94,7 @@ export const options: NextAdminOptions = {
         display: ["name", "category"],
       },
       edit: {
-        display: ["slug", "name", "description", "isSelfProduced", "category", "variants"],
+        display: ["slug", "name", "description", "isSelfProduced", "shopeeUrl", "category", "variants"],
         hooks: {
           beforeDb: async (data, mode, request) => {
 
@@ -245,6 +247,65 @@ export const options: NextAdminOptions = {
       },
       edit: {
         display: ["author", "location", "role", "text", "rating", "isActive"]
+      }
+    },
+    Article: {
+      title: "Artikel / Blog",
+      toString: (article: any) => article.title,
+      middlewares: {
+        delete: async (article: any) => {
+          if (article.coverImage) {
+            await deleteS3Image(article.coverImage);
+          }
+          return true;
+        }
+      },
+      aliases: {
+        id: "ID",
+        slug: "Slug URL (Contoh: tips-memilih-camilan-sehat)",
+        title: "Judul Artikel",
+        content: "Isi Konten Artikel",
+        coverImage: "Gambar Sampul Utama",
+        published: "Diterbitkan / Aktif",
+        createdAt: "Tanggal Dibuat",
+        updatedAt: "Terakhir Diperbarui"
+      },
+      list: {
+        display: ["title", "slug", "published", "createdAt"],
+      },
+      edit: {
+        display: ["slug", "title", "coverImage", "content", "published"],
+        fields: {
+          coverImage: {
+            format: "file",
+            handler: {
+              upload: async (buffer) => {
+                const compressedBuffer = await sharp(buffer)
+                  .resize({ width: 1200, withoutEnlargement: true }) // limit cover image width to 1200px
+                  .webp({ quality: 80 })
+                  .toBuffer();
+
+                const fileName = `articles/${crypto.randomUUID()}.webp`;
+
+                await s3Client.send(
+                  new PutObjectCommand({
+                    Bucket: process.env.S3_BUCKET,
+                    Key: fileName,
+                    Body: compressedBuffer,
+                    ContentType: "image/webp",
+                  })
+                );
+
+                return `${process.env.S3_PUBLIC_URL}/${fileName}`;
+              }
+            }
+          }
+        },
+        customFields: {
+          content: {
+            input: React.createElement(ArticleRichEditor),
+          }
+        }
       }
     }
   }

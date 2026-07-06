@@ -4,6 +4,7 @@ import { WhatsAppButton } from '@/components/shared/WhatsAppButton';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
 import { Button } from '@/components/ui/Button';
 import { buildWALink } from '@/lib/whatsapp';
+import { Tag, Cube, Truck, ShieldCheck } from '@phosphor-icons/react/dist/ssr';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -39,13 +40,15 @@ export default function GrosirPage() {
       <main className="flex-grow pt-20">
 
         {/* Section 1: Hero */}
-        <section className="bg-charcoal py-20 md:py-32 text-white relative overflow-hidden border-b border-concrete">
-          {/* Decorative element */}
-          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <section className="bg-navy py-20 md:py-32 text-white relative overflow-hidden border-b border-concrete">
+          {/* Subtle Decorative Backgrounds */}
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-royal/30 rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-sky/20 rounded-full blur-[80px] translate-y-1/3 translate-x-1/3 pointer-events-none"></div>
+
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-steel/30 bg-navy/60 mb-6 md:mb-8">
-                <span className="flex h-2 w-2 rounded-full bg-steel animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-steel/30 bg-white/5 mb-6 md:mb-8 backdrop-blur-sm">
+                <span className="flex h-2 w-2 rounded-full bg-signal animate-pulse" />
                 <span className="font-barlow font-bold text-[10px] text-steel uppercase tracking-widest">
                   Peluang Usaha Camilan
                 </span>
@@ -80,28 +83,28 @@ export default function GrosirPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-8 border border-concrete hover:border-royal hover:shadow-md transition-all duration-300">
-                <div className="text-3xl mb-4 text-royal">🏷️</div>
+                <Tag size={40} weight="bold" className="text-royal mb-4" />
                 <h3 className="font-display font-bold text-xl uppercase text-navy mb-3">Harga Tangan Pertama</h3>
                 <p className="text-iron text-sm leading-relaxed">
                   Dapatkan harga grosir langsung dari pabrik produksi kami untuk memaksimalkan keuntungan atau margin penjualan toko Anda.
                 </p>
               </div>
               <div className="bg-white p-8 border border-concrete hover:border-royal hover:shadow-md transition-all duration-300">
-                <div className="text-3xl mb-4 text-royal">📦</div>
+                <Cube size={40} weight="bold" className="text-royal mb-4" />
                 <h3 className="font-display font-bold text-xl uppercase text-navy mb-3">Atur MOQ Fleksibel</h3>
                 <p className="text-iron text-sm leading-relaxed">
                   Kami memahami kebutuhan bisnis Anda. Memulai usaha dengan kami sangat mudah berkat persyaratan minimum order yang ringan.
                 </p>
               </div>
               <div className="bg-white p-8 border border-concrete hover:border-royal hover:shadow-md transition-all duration-300">
-                <div className="text-3xl mb-4 text-royal">🚚</div>
+                <Truck size={40} weight="bold" className="text-royal mb-4" />
                 <h3 className="font-display font-bold text-xl uppercase text-navy mb-3">Logistik Mandiri</h3>
                 <p className="text-iron text-sm leading-relaxed">
                   Didukung armada logistik internal milik sendiri untuk pengiriman rute terjadwal pulau Jawa dengan ongkos yang jauh lebih hemat.
                 </p>
               </div>
               <div className="bg-white p-8 border border-concrete hover:border-royal hover:shadow-md transition-all duration-300">
-                <div className="text-3xl mb-4 text-royal">🛡️</div>
+                <ShieldCheck size={40} weight="bold" className="text-royal mb-4" />
                 <h3 className="font-display font-bold text-xl uppercase text-navy mb-3">Kualitas Terjamin</h3>
                 <p className="text-iron text-sm leading-relaxed">
                   Diproduksi higienis dengan perizinan P-IRT & Halal resmi demi keselamatan konsumen serta kemantapan operasional bisnis Anda.

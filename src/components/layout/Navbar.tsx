@@ -20,6 +20,7 @@ export function Navbar() {
   const navLinks = [
     { label: 'Produk', href: '/produk' },
     { label: 'Grosir', href: '/grosir' },
+    { label: 'Artikel', href: '/artikel' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Kontak', href: '/kontak' },
   ];

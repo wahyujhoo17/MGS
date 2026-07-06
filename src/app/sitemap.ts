@@ -41,6 +41,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Failed to fetch products for sitemap during build or runtime:", error);
   }
 
+  let articleEntries: any[] = [];
+  try {
+    // Get all published articles slugs and updated timestamps
+    const articles = await prisma.article.findMany({
+      where: { published: true },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    });
+
+    articleEntries = articles.map((a) => ({
+      url: `${baseUrl}/artikel/${a.slug}`,
+      lastModified: a.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch articles for sitemap:", error);
+  }
+
   return [
     {
       url: baseUrl,
@@ -55,6 +76,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/artikel`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/tentang`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -67,6 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     ...productEntries,
+    ...articleEntries,
   ];
 }
 

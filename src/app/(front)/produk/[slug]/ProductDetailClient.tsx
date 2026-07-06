@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { buildWALink, productOrderMessage } from "@/lib/whatsapp";
+import { ShoppingBag } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -27,6 +28,7 @@ interface Product {
   name: string;
   description: string;
   isSelfProduced: boolean;
+  shopeeUrl?: string | null;
   category: {
     name: string;
     slug: string;
@@ -218,28 +220,35 @@ export default function ProductDetailClient({ product }: Props) {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-auto space-y-4">
-                <a
-                  href={buildWALink(waMsg)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full"
-                >
-                  <Button variant="dark" size="full" className="text-base cursor-pointer">
-                    Pesan via WhatsApp →
-                  </Button>
-                </a>
-                <Button
-                  variant="ghost"
-                  size="full"
-                  className="border border-concrete text-iron hover:bg-offwhite cursor-pointer relative"
-                  onClick={() => alert("Katalog PDF sedang dalam proses pembuatan. Silakan hubungi kami via WhatsApp untuk mendapatkan daftar harga dan katalog terbaru!")}
-                >
-                  Download Katalog PDF
-                  <span className="absolute -top-2 -right-2 text-[10px] bg-royal text-white font-bold px-1.5 py-0.5 uppercase tracking-wider rounded-[4px]">
-                    Segera Hadir
-                  </span>
-                </Button>
+              <div className="mt-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <a
+                    href={buildWALink(waMsg)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full"
+                  >
+                    <Button variant="dark" size="full" className="text-base cursor-pointer">
+                      Pesan via WhatsApp →
+                    </Button>
+                  </a>
+
+                  <a
+                    href={product.shopeeUrl || "https://shopee.co.id/mgsjayaabadi"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full"
+                  >
+                    <button
+                      type="button"
+                      style={{ backgroundColor: "#EE4D2D" }}
+                      className="w-full text-white inline-flex items-center justify-center font-bold px-6 py-3.5 tracking-wider uppercase rounded-full hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all focus:outline-none h-11 text-sm border-0 font-barlow cursor-pointer"
+                    >
+                      <ShoppingBag weight="bold" className="mr-2 w-4 h-4" />
+                      Beli di Shopee
+                    </button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
