@@ -91,13 +91,13 @@ export default function TentangPage() {
             <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
                {/* Image Side */}
                <div className="w-full lg:w-1/2 relative">
-                  <div className="aspect-[4/3] bg-white w-full overflow-hidden shadow-2xl relative">
+                  <div className="aspect-[4/3] w-full relative flex items-center justify-center">
                      <Image
-                       src="/img/truck_delivery.jpg"
+                       src="/img/truck_delivery.png"
                        alt="Armada Logistik MGS"
                        fill
                        sizes="(max-width: 1024px) 100vw, 50vw"
-                       className="object-cover scale-110"
+                       className="object-contain filter drop-shadow-xl"
                      />
                   </div>
                   {/* Floating Stat Card */}
