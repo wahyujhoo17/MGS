@@ -54,7 +54,7 @@ export default function TentangPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
               <div className="relative aspect-[4/3] bg-charcoal w-full overflow-hidden shadow-xl group">
                 <Image
-                  src="/img/team_mgs.jpg"
+                  src="/img/pemberdayaan_wanita.jpg"
                   alt="Tim Produksi UMKM MGS"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
