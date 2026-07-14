@@ -47,8 +47,9 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-bold text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] tracking-tight uppercase mb-6 md:mb-8 text-navy"
           >
-            Pabrik Snack Pedas.<br />
-            <span className="text-royal">Kualitas Konsisten.</span>
+            Produsen Snack Pedas.<br />
+            <span className="text-royal">Kualitas Terjaga.<br />
+            Rasa Terpercaya.</span>
           </motion.h1>
 
           <motion.p
