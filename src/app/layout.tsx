@@ -118,7 +118,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="preconnect" href="https://s3.obs.web.id" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://s3.lumicloud.my.id" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

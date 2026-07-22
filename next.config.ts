@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "s3.obs.web.id",
+        hostname: "s3.lumicloud.my.id",
       },
     ],
   },
