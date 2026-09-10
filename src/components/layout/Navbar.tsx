@@ -29,15 +29,15 @@ export function Navbar() {
     <>
       <nav
         className={cn(
-          'fixed top-0 inset-x-0 z-50 h-20 flex items-center transition-all duration-300',
-          scrolled ? 'bg-white/90 backdrop-blur-xl border-b border-concrete shadow-sm' : 'bg-transparent'
+          'fixed top-0 inset-x-0 z-50 h-16 sm:h-20 flex items-center transition-all duration-300',
+          scrolled ? 'bg-white/95 backdrop-blur-xl border-b border-concrete shadow-xs' : 'bg-transparent'
         )}
       >
-        <div className="max-w-7xl mx-auto w-full px-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center relative z-50" onClick={() => setIsOpen(false)}>
-            <div className="relative w-32 h-10">
-               <Image src="/img/MGS.png" alt="MGS Logo" fill sizes="(max-width: 768px) 100vw, 200px" className="object-contain object-left" priority />
+            <div className="relative w-28 h-8 sm:w-32 sm:h-10">
+               <Image src="/img/MGS.png" alt="MGS Logo" fill sizes="(max-width: 768px) 120px, 200px" className="object-contain object-left" priority />
             </div>
           </Link>
 
@@ -56,7 +56,7 @@ export function Navbar() {
           </ul>
 
           {/* CTA & Mobile Toggle */}
-          <div className="flex items-center gap-4 relative z-50">
+          <div className="flex items-center gap-3 sm:gap-4 relative z-50">
             <a
               href={buildWALink('Halo MGS Jaya Abadi')}
               target="_blank"
@@ -67,11 +67,11 @@ export function Navbar() {
             </a>
             
             <button
-              className="md:hidden text-navy p-2 -mr-2"
+              className="md:hidden text-navy p-2 -mr-1.5 focus:outline-none"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle Menu"
             >
-              {isOpen ? <X weight="bold" className="w-6 h-6" /> : <List weight="bold" className="w-6 h-6" />}
+              {isOpen ? <X weight="bold" className="w-6 h-6 text-white" /> : <List weight="bold" className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -79,14 +79,14 @@ export function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-charcoal pt-20 px-6 pb-6 flex flex-col justify-between md:hidden animate-in fade-in duration-200">
-          <ul className="flex flex-col gap-6 mt-8">
+        <div className="fixed inset-0 z-40 bg-navy/98 backdrop-blur-2xl pt-20 px-6 pb-8 flex flex-col justify-between md:hidden animate-in fade-in duration-200">
+          <ul className="flex flex-col gap-6 mt-6">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-3xl font-display font-bold text-white uppercase tracking-wider"
+                  className="text-2xl sm:text-3xl font-display font-bold text-white hover:text-signal uppercase tracking-wider transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -94,13 +94,12 @@ export function Navbar() {
             ))}
           </ul>
           
-          <div className="mt-auto">
-            <hr className="border-iron/30 mb-6" />
+          <div className="mt-auto pt-6 border-t border-white/15">
             <a
               href={buildWALink('Halo MGS Jaya Abadi')}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center bg-royal text-white px-6 py-4 text-sm font-semibold uppercase tracking-widest rounded-[4px]"
+              className="flex w-full items-center justify-center bg-royal text-white px-6 py-4 text-sm font-bold uppercase tracking-widest rounded-xl shadow-lg hover:bg-royal/90 transition-all"
             >
               Hubungi via WhatsApp
             </a>
