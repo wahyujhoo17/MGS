@@ -1,5 +1,4 @@
 import { HeroSection } from '@/components/home/HeroSection';
-import { TrustBar } from '@/components/home/TrustBar';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { DualPathCTA } from '@/components/home/DualPathCTA';
 import { AboutSnippet } from '@/components/home/AboutSnippet';
@@ -24,7 +23,6 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow pt-16">
         <HeroSection />
-        <TrustBar />
         <FeaturedProducts />
         <DualPathCTA />
         <AboutSnippet />
