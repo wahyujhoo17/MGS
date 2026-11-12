@@ -10,11 +10,20 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // API admin: balas 401 (bukan redirect) bila belum login
+  const isApi = pathname.startsWith("/api/mgs-admin");
+  const deny = (clearCookie = false) => {
+    const response = isApi
+      ? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      : NextResponse.redirect(new URL("/mgs-admin/login", request.url));
+    if (clearCookie) response.cookies.delete("mgs_session");
+    return response;
+  };
+
   const sessionToken = request.cookies.get("mgs_session")?.value;
 
   if (!sessionToken) {
-    const loginUrl = new URL("/mgs-admin/login", request.url);
-    return NextResponse.redirect(loginUrl);
+    return deny();
   }
 
   // getJwtSecret throws error if JWT_SECRET is not set which is checked dynamically
@@ -22,14 +31,12 @@ export async function proxy(request: NextRequest) {
   const session = await verifySession(sessionToken, secret);
 
   if (!session) {
-    const response = NextResponse.redirect(new URL("/mgs-admin/login", request.url));
-    response.cookies.delete("mgs_session");
-    return response;
+    return deny(true);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/mgs-admin/:path*"],
+  matcher: ["/mgs-admin/:path*", "/api/mgs-admin/:path*"],
 };
