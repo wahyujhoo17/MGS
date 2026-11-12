@@ -7,104 +7,111 @@ import prisma from "@/lib/prisma";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
-import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { cache } from "react";
+import { SITE_URL, absoluteUrl, articleDescription, toPlainText } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function stripHtml(html: string) {
-  return html.replace(/<[^>]*>/g, "");
-}
+// Satu query per request untuk generateMetadata + halaman
+const getArticle = cache((slug: string) => prisma.article.findUnique({ where: { slug } }));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = await prisma.article.findUnique({
-    where: { slug },
-  });
+  const article = await getArticle(slug);
 
   if (!article || !article.published) {
     return {
       title: "Artikel Tidak Ditemukan",
+      robots: { index: false, follow: false },
     };
   }
 
-  const plainText = stripHtml(article.content);
-  const description = plainText.substring(0, 150) + "...";
-
-  let imageUrl = article.coverImage || "https://mgs.my.id/img/MGS.png";
-  if (imageUrl && !imageUrl.startsWith("http")) {
-    imageUrl = `https://mgs.my.id${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
-  }
+  const description = articleDescription(article);
+  const imageUrl = absoluteUrl(article.coverImage);
+  const url = `${SITE_URL}/artikel/${slug}`;
 
   return {
     title: `${article.title} — MGS Jaya Abadi`,
-    description: description,
+    description,
     alternates: {
-      canonical: `/artikel/${slug}`,
+      canonical: url,
     },
     openGraph: {
       title: article.title,
-      description: description,
+      description,
       type: "article",
-      url: `https://mgs.my.id/artikel/${slug}`,
+      url,
+      siteName: "MGS Jaya Abadi",
+      locale: "id_ID",
       publishedTime: article.createdAt.toISOString(),
       modifiedTime: article.updatedAt.toISOString(),
-      images: [
-        {
-          url: imageUrl,
-          alt: article.title,
-        }
-      ],
+      images: [{ url: imageUrl, alt: article.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
-      description: description,
+      description,
       images: [imageUrl],
-    }
+    },
   };
 }
 
 export default async function ArtikelDetailPage({ params }: Props) {
   const { slug } = await params;
-  const article = await prisma.article.findUnique({
-    where: { slug },
-  });
+  const article = await getArticle(slug);
 
   if (!article || !article.published) {
     notFound();
   }
 
-  const plainText = stripHtml(article.content);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://mgs.my.id/artikel/${article.slug}`
+  const articleUrl = `${SITE_URL}/artikel/${article.slug}`;
+  const plainText = toPlainText(article.content);
+
+  // Sumber eksternal yang dikutip di artikel → properti "citation"
+  const citations = Array.from(
+    new Set(
+      Array.from(article.content.matchAll(/<a\s[^>]*href=["'](https?:\/\/[^"']+)["']/gi))
+        .map((m) => m[1])
+        .filter((u) => !u.startsWith(SITE_URL))
+    )
+  );
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": articleUrl },
+      "headline": article.title,
+      "description": articleDescription(article, 200),
+      "image": [absoluteUrl(article.coverImage)],
+      "datePublished": article.createdAt.toISOString(),
+      "dateModified": article.updatedAt.toISOString(),
+      "inLanguage": "id-ID",
+      "wordCount": plainText.split(" ").filter(Boolean).length,
+      "author": {
+        "@type": "Organization",
+        "name": "MGS Jaya Abadi",
+        "url": SITE_URL,
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "MGS Jaya Abadi",
+        "logo": { "@type": "ImageObject", "url": `${SITE_URL}/img/MGS.png` },
+      },
+      ...(citations.length > 0 ? { citation: citations } : {}),
     },
-    "headline": article.title,
-    "description": plainText.substring(0, 200) + "...",
-    "image": article.coverImage
-      ? (article.coverImage.startsWith("http") ? article.coverImage : `https://mgs.my.id${article.coverImage.startsWith("/") ? "" : "/"}${article.coverImage}`)
-      : "https://mgs.my.id/img/MGS.png",
-    "datePublished": article.createdAt.toISOString(),
-    "dateModified": article.updatedAt.toISOString(),
-    "author": {
-      "@type": "Organization",
-      "name": "MGS Jaya Abadi",
-      "url": "https://mgs.my.id"
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Beranda", "item": SITE_URL },
+        { "@type": "ListItem", "position": 2, "name": "Artikel", "item": `${SITE_URL}/artikel` },
+        { "@type": "ListItem", "position": 3, "name": article.title, "item": articleUrl },
+      ],
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "MGS Jaya Abadi",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://mgs.my.id/img/MGS.png"
-      }
-    }
-  };
+  ];
 
   const formattedDate = new Date(article.createdAt).toLocaleDateString("id-ID", {
     day: "numeric",

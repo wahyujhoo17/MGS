@@ -50,9 +50,10 @@ Jika diberikan "SUMBER WEB" bernomor, Anda WAJIB:
 
 ATURAN FORMAT OUTPUT (WAJIB DIIKUTI):
 1. OUTPUT HARUS BERUPA FORMAT JSON MURNI (TANPA TEKS PENGANTAR APAPUN, TANPA MARKDOWN BLOK).
-2. Struktur JSON wajib memiliki 3 key ini:
+2. Struktur JSON wajib memiliki 4 key ini:
    - "title": Judul menarik, spesifik, dan sesuai angle (Maksimal 60 karakter).
    - "slug": URL slug dari judul tersebut.
+   - "description": Meta description untuk Google, 130-155 karakter, satu kalimat padat yang memuat kata kunci utama dan manfaat/inti artikel. Bukan salinan kalimat pertama artikel, tanpa tanda kutip, tanpa HTML.
    - "content": Isi artikel full HTML (Maksimal 600 - 800 kata).
 3. ATURAN HTML CONTENT KETAT:
    - HANYA GUNAKAN tag HTML standar: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <a>, <code>, <blockquote>.
@@ -263,6 +264,12 @@ export async function POST(req: Request) {
       const finalized = finalizeSources(cleanedHTML, webSources);
       parsed.content = finalized.html;
       parsed.sources = finalized.used.map((s) => ({ title: s.title, url: s.url }));
+    }
+
+    if (typeof parsed.description === "string") {
+      parsed.description = parsed.description.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 160);
+    } else {
+      parsed.description = "";
     }
 
     return NextResponse.json(parsed);

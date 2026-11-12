@@ -265,6 +265,7 @@ export const options: NextAdminOptions = {
         slug: "Slug URL (Contoh: tips-memilih-camilan-sehat)",
         title: "Judul Artikel",
         content: "Isi Konten Artikel",
+        metaDescription: "Meta Description SEO (130–155 karakter, opsional)",
         coverImage: "Gambar Sampul Utama",
         published: "Diterbitkan / Aktif",
         createdAt: "Tanggal Dibuat",
@@ -272,9 +273,10 @@ export const options: NextAdminOptions = {
       },
       list: {
         display: ["title", "slug", "published", "createdAt"],
+        defaultSort: { field: "createdAt", direction: "desc" },
       },
       edit: {
-        display: ["slug", "title", "coverImage", "content", "published"],
+        display: ["slug", "title", "metaDescription", "coverImage", "content", "published"],
         fields: {
           coverImage: {
             format: "file",

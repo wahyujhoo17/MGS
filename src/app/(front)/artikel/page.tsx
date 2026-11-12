@@ -6,61 +6,74 @@ import prisma from "@/lib/prisma";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
-import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { unstable_cache } from "next/cache";
+import { SITE_URL, articleDescription } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
-
-export const metadata: Metadata = {
-  title: "Artikel & Info Terbaru — MGS Jaya Abadi",
-  description: "Dapatkan tips bisnis kuliner, info produk camilan, peluang reseller dan grosir makanan ringan terpercaya di Indonesia dari MGS Jaya Abadi.",
-  alternates: {
-    canonical: "/artikel",
-  },
-  openGraph: {
-    title: "Artikel & Info Terbaru — MGS Jaya Abadi",
-    description: "Tips bisnis makanan ringan, panduan kemitraan reseller, dan artikel inspiratif dari MGS Jaya Abadi.",
-    type: "website",
-  },
-};
-
-function stripHtml(html: string) {
-  return html.replace(/<[^>]*>/g, "");
-}
+const PAGE_SIZE = 9;
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+function parsePage(value: string | string[] | undefined): number {
+  const n = typeof value === "string" ? parseInt(value, 10) : 1;
+  return Number.isFinite(n) && n > 0 ? n : 1;
+}
+
+// Cache 60 detik: halaman tidak query DB di setiap request (TTFB lebih cepat)
+const getArticleList = unstable_cache(
+  async (page: number) => {
+    const featured = await prisma.article.findFirst({
+      where: { published: true },
+      orderBy: { createdAt: "desc" },
+    });
+    const listWhere = {
+      published: true,
+      ...(featured ? { NOT: { id: featured.id } } : {}),
+    };
+    const [articles, totalCount] = await Promise.all([
+      prisma.article.findMany({
+        where: listWhere,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.article.count({ where: listWhere }),
+    ]);
+    return { featured, articles, totalCount };
+  },
+  ["artikel-list"],
+  { revalidate: 60, tags: ["articles"] }
+);
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const page = parsePage((await props.searchParams).page);
+  const canonical = page > 1 ? `${SITE_URL}/artikel?page=${page}` : `${SITE_URL}/artikel`;
+  const suffix = page > 1 ? ` — Halaman ${page}` : "";
+  return {
+    title: `Artikel & Info Terbaru${suffix} — MGS Jaya Abadi`,
+    description:
+      "Dapatkan tips bisnis kuliner, info produk camilan, peluang reseller dan grosir makanan ringan terpercaya di Indonesia dari MGS Jaya Abadi.",
+    alternates: { canonical },
+    openGraph: {
+      title: `Artikel & Info Terbaru${suffix} — MGS Jaya Abadi`,
+      description:
+        "Tips bisnis makanan ringan, panduan kemitraan reseller, dan artikel inspiratif dari MGS Jaya Abadi.",
+      type: "website",
+      url: canonical,
+    },
+  };
+}
+
 export default async function ArtikelPage(props: Props) {
   const searchParams = await props.searchParams;
-  const page = typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
-  const take = 9;
-  const skip = (page > 0 ? page - 1 : 0) * take;
+  const page = parsePage(searchParams.page);
 
-  // Artikel terbaru disorot di atas (hanya halaman 1), sisanya masuk grid + pagination
-  const featured = await prisma.article.findFirst({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-  });
+  const { featured, articles, totalCount } = await getArticleList(page);
 
-  const listWhere = {
-    published: true,
-    ...(featured ? { NOT: { id: featured.id } } : {}),
-  };
-
-  const [articles, totalCount] = await Promise.all([
-    prisma.article.findMany({
-      where: listWhere,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take,
-    }),
-    prisma.article.count({ where: listWhere })
-  ]);
-
-  const totalPages = Math.ceil(totalCount / take);
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const showFeatured = featured && page <= 1;
-  const featuredExcerpt = featured ? stripHtml(featured.content).substring(0, 220) + "..." : "";
+  const featuredExcerpt = featured ? articleDescription(featured, 220) : "";
   const featuredDate = featured
     ? new Date(featured.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
     : "";
@@ -177,7 +190,7 @@ export default async function ArtikelPage(props: Props) {
           ) : articles.length === 0 ? null : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {articles.map((article) => {
-                const excerpt = stripHtml(article.content).substring(0, 110) + "...";
+                const excerpt = articleDescription(article, 110);
                 const formattedDate = new Date(article.createdAt).toLocaleDateString("id-ID", {
                   day: "numeric",
                   month: "long",

@@ -695,6 +695,13 @@ export default function ArticleRichEditorClient({ name, value, onChange, disable
         titleInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
       
+      const descInput = document.querySelector('input[name="metaDescription"], textarea[name="metaDescription"], input[id$="metaDescription"], textarea[id$="metaDescription"]') as HTMLInputElement | HTMLTextAreaElement | null;
+      if (descInput && data.description) {
+        const proto = descInput instanceof HTMLTextAreaElement ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+        Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(descInput, data.description);
+        descInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
       if (slugInput && data.slug) {
         const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
         nativeInputValueSetter?.call(slugInput, data.slug);
