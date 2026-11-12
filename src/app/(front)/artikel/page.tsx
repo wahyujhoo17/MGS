@@ -37,17 +37,33 @@ export default async function ArtikelPage(props: Props) {
   const take = 9;
   const skip = (page > 0 ? page - 1 : 0) * take;
 
+  // Artikel terbaru disorot di atas (hanya halaman 1), sisanya masuk grid + pagination
+  const featured = await prisma.article.findFirst({
+    where: { published: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const listWhere = {
+    published: true,
+    ...(featured ? { NOT: { id: featured.id } } : {}),
+  };
+
   const [articles, totalCount] = await Promise.all([
     prisma.article.findMany({
-      where: { published: true },
+      where: listWhere,
       orderBy: { createdAt: "desc" },
       skip,
       take,
     }),
-    prisma.article.count({ where: { published: true } })
+    prisma.article.count({ where: listWhere })
   ]);
 
   const totalPages = Math.ceil(totalCount / take);
+  const showFeatured = featured && page <= 1;
+  const featuredExcerpt = featured ? stripHtml(featured.content).substring(0, 220) + "..." : "";
+  const featuredDate = featured
+    ? new Date(featured.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
+    : "";
 
   return (
     <>
@@ -78,7 +94,58 @@ export default async function ArtikelPage(props: Props) {
 
         {/* Content Section */}
         <section className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-          {articles.length === 0 ? (
+          {/* Featured: Artikel Terbaru */}
+          {showFeatured && featured && (
+            <article className="mb-12 md:mb-16 group grid md:grid-cols-5 bg-white border-2 border-royal/30 rounded-[4px] overflow-hidden shadow-md hover:shadow-xl hover:border-royal transition-all duration-300">
+              <Link
+                href={`/artikel/${featured.slug}`}
+                className="relative md:col-span-3 aspect-[16/10] md:aspect-auto md:min-h-[360px] bg-offwhite block"
+                aria-label={featured.title}
+              >
+                {featured.coverImage ? (
+                  <Image
+                    src={featured.coverImage}
+                    alt={featured.title}
+                    fill
+                    priority
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center text-xs text-iron/40 italic font-mono">
+                    No Image Supplied
+                  </div>
+                )}
+                <span className="absolute top-4 left-4 inline-flex items-center gap-2 bg-signal text-white font-barlow text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                  Terbaru
+                </span>
+              </Link>
+              <div className="md:col-span-2 flex flex-col justify-center p-6 sm:p-8 md:p-10 space-y-4">
+                <span className="font-barlow text-[11px] font-bold text-royal uppercase tracking-widest">
+                  {featuredDate}
+                </span>
+                <Link href={`/artikel/${featured.slug}`} className="block">
+                  <h2 className="font-display font-bold text-2xl sm:text-3xl uppercase text-navy group-hover:text-royal transition-colors leading-tight">
+                    {featured.title}
+                  </h2>
+                </Link>
+                <p className="text-iron text-sm sm:text-base leading-relaxed line-clamp-4">
+                  {featuredExcerpt}
+                </p>
+                <div>
+                  <Link
+                    href={`/artikel/${featured.slug}`}
+                    className="inline-flex items-center justify-center bg-navy text-white px-6 py-3 text-xs font-bold uppercase tracking-widest rounded-full hover:bg-royal hover:shadow-lg transition-all"
+                  >
+                    Baca Artikel &rarr;
+                  </Link>
+                </div>
+              </div>
+            </article>
+          )}
+
+          {articles.length === 0 && !showFeatured ? (
             <div className="text-center py-20 bg-white border border-concrete rounded-[4px] shadow-sm">
               <svg
                 className="mx-auto h-12 w-12 text-iron/50"
@@ -107,7 +174,7 @@ export default async function ArtikelPage(props: Props) {
                 </Link>
               </div>
             </div>
-          ) : (
+          ) : articles.length === 0 ? null : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {articles.map((article) => {
                 const excerpt = stripHtml(article.content).substring(0, 110) + "...";

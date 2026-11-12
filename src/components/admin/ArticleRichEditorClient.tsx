@@ -438,6 +438,7 @@ function AIGenerateModal({
   onGenerate: (data: any) => Promise<void>;
 }) {
   const [prompt, setPrompt] = useState("");
+  const [angle, setAngle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -454,7 +455,7 @@ function AIGenerateModal({
       const res = await fetch("/api/mgs-admin/generate-article", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, angle }),
       });
       
       const data = await res.json();
@@ -496,8 +497,26 @@ function AIGenerateModal({
             className="w-full h-32 p-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none bg-gray-50/50"
             disabled={loading}
           />
+          <label className="block text-sm font-medium text-gray-700 mt-4 mb-2">
+            Sudut Pandang Artikel
+          </label>
+          <select
+            value={angle}
+            onChange={(e) => setAngle(e.target.value)}
+            disabled={loading}
+            className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 bg-gray-50/50"
+          >
+            <option value="">Otomatis (AI menyesuaikan dengan topik)</option>
+            <option value="dampak">Analisis dampak (siapa terdampak &amp; seberapa besar)</option>
+            <option value="penjelasan">Penjelasan (kenapa bisa terjadi)</option>
+            <option value="berita">Berita / update terbaru</option>
+            <option value="data">Data &amp; tren pasar</option>
+            <option value="opini">Opini / sudut pandang</option>
+            <option value="cerita">Cerita / studi kasus</option>
+            <option value="panduan">Panduan praktis (tips &amp; solusi)</option>
+          </select>
           {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
-          
+
           <div className="mt-6 flex justify-end gap-3">
             <button
               type="button"
